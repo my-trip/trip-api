@@ -1,0 +1,5 @@
+FROM hasura/graphql-engine:v1.3.3
+
+COPY ./server.sh /app/server.sh
+
+CMD ["sh", "/app/server.sh"]

@@ -1,0 +1,8 @@
+FROM hasura/graphql-engine:v1.3.3.cli-migrations-v2
+
+COPY ./migrate.sh /app/migrate.sh
+
+COPY ./migrations /hasura-migrations
+COPY ./metadata /hasura-metadata
+
+ENTRYPOINT ["sh", "/app/migrate.sh"]
