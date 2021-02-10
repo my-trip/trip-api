@@ -1,0 +1,47 @@
+name: Deploy Workflow
+
+on:
+  release:
+    types: [published]
+  env: 
+    HASURA_ENDPOINT: ${{ secrets.HASURA_ENDPOINT }}
+    HASURA_ADMIN_SECRET: ${{ secrets.HASURA_ADMIN_SECRET }}
+ 
+jobs:
+
+  settings:
+    runs-on: ubuntu-latest
+    outputs:
+      approved-release: ${{steps.check-release.outputs.approved-release}}
+    steps:
+      - id: check-release
+        if: github.event_name == 'release'
+        run: |
+          if [[ ${{ github.event.release.tag_name }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo ::set-output name=approved-release::"true"; fi
+  
+  deploy:
+    needs: settings
+    runs-on: ubuntu-latest
+    if: contains(needs.settings.outputs.require_deploy, 'true') && contains(needs.settings.outputs.approved-release, 'true')
+    steps:
+
+      - uses: actions/checkout@v1
+
+      - name: Apply hasura migrations
+
+        uses: tibotiber/hasura-action@master
+        with:
+          args: Migrate apply
+        env:
+          HASURA_ENDPOINT: ${{ secrets.HASURA_ENDPOINT }}
+          HASURA_ADMIN_SECRET: ${{ secrets.HASURA_ADMIN_SECRET }}
+          HASURA_WORKDIR: hasura
+          
+      - name: Apply hasura metadata
+        uses: tibotiber/hasura-action@master
+        with:
+          args: Metadata apply
+        env:
+          HASURA_ENDPOINT: ${{ secrets.HASURA_ENDPOINT }}
+          HASURA_ADMIN_SECRET: ${{ secrets.HASURA_ADMIN_SECRET }}
+          HASURA_WORKDIR: hasura
