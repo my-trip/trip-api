@@ -1,0 +1,4 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- insert into document_type (value) values ('CPF');
+-- insert into document_type (value) values ('CNPJ');

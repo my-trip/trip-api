@@ -1,1 +1,34 @@
-[]
+- table:
+    schema: public
+    name: address
+- table:
+    schema: public
+    name: agency
+- table:
+    schema: public
+    name: agency_manager
+- table:
+    schema: public
+    name: boarding
+- table:
+    schema: public
+    name: boarding_type
+- table:
+    schema: public
+    name: document_type
+  is_enum: true
+- table:
+    schema: public
+    name: package
+- table:
+    schema: public
+    name: package_item
+- table:
+    schema: public
+    name: person
+- table:
+    schema: public
+    name: tour
+- table:
+    schema: public
+    name: user
