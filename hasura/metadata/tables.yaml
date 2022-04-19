@@ -1,34 +1,247 @@
 - table:
     schema: public
     name: address
+  array_relationships:
+    - name: tours
+      using:
+        foreign_key_constraint_on:
+          column: destiny
+          table:
+            schema: public
+            name: tour
 - table:
     schema: public
     name: agency
+  array_relationships:
+    - name: agency_managers
+      using:
+        foreign_key_constraint_on:
+          column: agency_id
+          table:
+            schema: public
+            name: agency_manager
+    - name: tours
+      using:
+        foreign_key_constraint_on:
+          column: agency_id
+          table:
+            schema: public
+            name: tour
 - table:
     schema: public
     name: agency_manager
+  object_relationships:
+    - name: agency
+      using:
+        foreign_key_constraint_on: agency_id
+    - name: user
+      using:
+        foreign_key_constraint_on: user_id
 - table:
     schema: public
     name: boarding
+  object_relationships:
+    - name: boarding_type
+      using:
+        foreign_key_constraint_on: type
+    - name: tour
+      using:
+        foreign_key_constraint_on: tour_id
 - table:
     schema: public
     name: boarding_type
+  array_relationships:
+    - name: boardings
+      using:
+        foreign_key_constraint_on:
+          column: type
+          table:
+            schema: public
+            name: boarding
 - table:
     schema: public
     name: document_type
   is_enum: true
+  array_relationships:
+    - name: people
+      using:
+        foreign_key_constraint_on:
+          column: document_type
+          table:
+            schema: public
+            name: person
 - table:
     schema: public
     name: package
+  object_relationships:
+    - name: tour
+      using:
+        foreign_key_constraint_on: tour_id
+  array_relationships:
+    - name: package_accesses
+      using:
+        foreign_key_constraint_on:
+          column: package_id
+          table:
+            schema: public
+            name: package_access
+    - name: package_items
+      using:
+        foreign_key_constraint_on:
+          column: package_id
+          table:
+            schema: public
+            name: package_item
+    - name: purchases
+      using:
+        foreign_key_constraint_on:
+          column: package_id
+          table:
+            schema: public
+            name: purchase
+    - name: reservations
+      using:
+        foreign_key_constraint_on:
+          column: package_id
+          table:
+            schema: public
+            name: reservation
+- table:
+    schema: public
+    name: package_access
+  object_relationships:
+    - name: package
+      using:
+        foreign_key_constraint_on: package_id
+    - name: purchase
+      using:
+        foreign_key_constraint_on: purchase_id
+  array_relationships:
+    - name: travelers
+      using:
+        foreign_key_constraint_on:
+          column: package_access_id
+          table:
+            schema: public
+            name: traveler
 - table:
     schema: public
     name: package_item
+  object_relationships:
+    - name: package
+      using:
+        foreign_key_constraint_on: package_id
 - table:
     schema: public
     name: person
+  object_relationships:
+    - name: documentTypeByDocumentType
+      using:
+        foreign_key_constraint_on: document_type
+  array_relationships:
+    - name: purchases
+      using:
+        foreign_key_constraint_on:
+          column: person_id
+          table:
+            schema: public
+            name: purchase
+    - name: reservations
+      using:
+        foreign_key_constraint_on:
+          column: person_id
+          table:
+            schema: public
+            name: reservation
+    - name: travelers
+      using:
+        foreign_key_constraint_on:
+          column: person_id
+          table:
+            schema: public
+            name: traveler
+- table:
+    schema: public
+    name: purchase
+  object_relationships:
+    - name: package
+      using:
+        foreign_key_constraint_on: package_id
+    - name: person
+      using:
+        foreign_key_constraint_on: person_id
+    - name: reservation
+      using:
+        foreign_key_constraint_on: reservation_id
+  array_relationships:
+    - name: package_accesses
+      using:
+        foreign_key_constraint_on:
+          column: purchase_id
+          table:
+            schema: public
+            name: package_access
+- table:
+    schema: public
+    name: reservation
+  object_relationships:
+    - name: package
+      using:
+        foreign_key_constraint_on: package_id
+    - name: person
+      using:
+        foreign_key_constraint_on: person_id
+  array_relationships:
+    - name: purchases
+      using:
+        foreign_key_constraint_on:
+          column: reservation_id
+          table:
+            schema: public
+            name: purchase
 - table:
     schema: public
     name: tour
+  object_relationships:
+    - name: address
+      using:
+        foreign_key_constraint_on: destiny
+    - name: agency
+      using:
+        foreign_key_constraint_on: agency_id
+  array_relationships:
+    - name: boardings
+      using:
+        foreign_key_constraint_on:
+          column: tour_id
+          table:
+            schema: public
+            name: boarding
+    - name: packages
+      using:
+        foreign_key_constraint_on:
+          column: tour_id
+          table:
+            schema: public
+            name: package
+- table:
+    schema: public
+    name: traveler
+  object_relationships:
+    - name: package_access
+      using:
+        foreign_key_constraint_on: package_access_id
+    - name: person
+      using:
+        foreign_key_constraint_on: person_id
 - table:
     schema: public
     name: user
+  array_relationships:
+    - name: agency_managers
+      using:
+        foreign_key_constraint_on:
+          column: user_id
+          table:
+            schema: public
+            name: agency_manager
