@@ -16,7 +16,7 @@ services:
       - "8080:8080"
     depends_on:
       - postgres
-      - ms-actions
+      - actions
     restart: always
     env_file: ./hasura/env
   hasura-migrate:
@@ -31,18 +31,18 @@ services:
     volumes:
       - ./hasura/migrations:/hasura-migrations
       - ./hasura/metadata:/hasura-metadata
-  ms-actions:
+  actions:
     build: 
-      context: ms-actions
+      context: actions
     networks:
       general:
         aliases:
-          - ms-actions
+          - actions
     volumes:
-      - "${PWD}/ms-actions/:/app"
+      - "${PWD}/actions/:/app"
     ports:
       - "8081:8081"
-    env_file: ./ms-actions/env
+    env_file: ./actions/env
 volumes:
   db_data:
 

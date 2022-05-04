@@ -9,6 +9,7 @@ ADD . /app
 RUN rm Dockerfile env
 
 RUN npm install
+
 RUN npm run build
 
 ENTRYPOINT ["/bin/sh"]
