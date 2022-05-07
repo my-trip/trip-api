@@ -1,4 +1,10 @@
 type Mutation {
+  login(
+    data: LoginInput!
+  ): LoginOutput
+}
+
+type Mutation {
   signup(
     data: SignupInput!
   ): SignupOutput
@@ -14,9 +20,20 @@ input SignupInput {
   role: String
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type SignupOutput {
   token: String!
   id: uuid!
+  exp: Int!
+}
+
+type LoginOutput {
+  token: String!
+  id: uuid
   exp: Int!
 }
 

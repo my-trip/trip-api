@@ -80,13 +80,13 @@ export class AuthService {
   }
 
   public static async validate(
-    username: string,
+    email: string,
     password: string
   ): Promise<UserModel> {
     const getUserResponse = await HasuraService.query({
       query: USER_BY_EMAIL,
       variables: {
-        username,
+        email,
       },
     })
 
@@ -110,16 +110,16 @@ export class AuthService {
   }
 
   public static async login(
-    username: string,
+    email: string,
     password: string
   ): Promise<AuthData> {
-    const user = await this.validate(username, password)
+    const user = await this.validate(email, password)
     const jwtToken = await this.generateJwtToken(user)
 
     const jwtDecodedToken = jwt.decode(jwtToken, { complete: true })
 
-    if (username === password) {
-      console.log(`PasswordNotSafe - Username and password is equals: username -> ${username}`)
+    if (email === password) {
+      console.log(`PasswordNotSafe - Username and password is equals: username -> ${email}`)
       throw new Error('PasswordNotSafe')
     }
 

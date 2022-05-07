@@ -1,4 +1,4 @@
-CREATE TABLE "public"."person" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), "name" bpchar NOT NULL, "document" bpchar NOT NULL, "document_type" bpchar NOT NULL, "birth" timestamptz, PRIMARY KEY ("id") , FOREIGN KEY ("document_type") REFERENCES "public"."document_type"("value") ON UPDATE restrict ON DELETE restrict, UNIQUE ("id"));
+CREATE TABLE "public"."person" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), "name" varchar NOT NULL, "document" varchar NOT NULL, "document_type" varchar NOT NULL, "birth" timestamptz, PRIMARY KEY ("id") , FOREIGN KEY ("document_type") REFERENCES "public"."document_type"("value") ON UPDATE restrict ON DELETE restrict, UNIQUE ("id"));
 CREATE OR REPLACE FUNCTION "public"."set_current_timestamp_updated_at"()
 RETURNS TRIGGER AS $$
 DECLARE

@@ -18,14 +18,12 @@ interface signupProps {
 export class User {
     static async create(user: UserModel): Promise<UserModel> {
         try {
-            console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHH")
             const response = await HasuraService.mutate({
                 mutation: INSERT_USER,
                 variables: user
             })
-            console.log(response)
 
-            return response.data as UserModel
+            return response.data.insert_user_one as UserModel
         } catch (e) {
             console.log(e)
             throw e
@@ -43,19 +41,13 @@ export class User {
         role
     }: signupProps): Promise<UserModel> {
         try {
-            console.log("AQUIIII")
-
             const encryptedPassword = AuthService.encryptPassword(password)
-
-            console.log({ encryptedPassword })
 
             const user = await User.create({
                 password: encryptedPassword,
                 email,
                 role
             })
-
-            console.log({ user })
 
             await Person.create({
                 birth,

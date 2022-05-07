@@ -1,4 +1,4 @@
-CREATE TABLE "public"."package_item" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), "name" bpchar NOT NULL, "description" bpchar, "is_event" boolean NOT NULL DEFAULT false, "start_date" timestamptz, "end_date" timestamptz, "package_id" uuid NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("package_id") REFERENCES "public"."package"("id") ON UPDATE restrict ON DELETE restrict, UNIQUE ("id"));
+CREATE TABLE "public"."package_item" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), "name" varchar NOT NULL, "description" varchar, "is_event" boolean NOT NULL DEFAULT false, "start_date" timestamptz, "end_date" timestamptz, "package_id" uuid NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("package_id") REFERENCES "public"."package"("id") ON UPDATE restrict ON DELETE restrict, UNIQUE ("id"));
 CREATE OR REPLACE FUNCTION "public"."set_current_timestamp_updated_at"()
 RETURNS TRIGGER AS $$
 DECLARE

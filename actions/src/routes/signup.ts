@@ -15,7 +15,6 @@ router.post('/signup', async (req, res) => {
     role
   } = req.body.input.data
 
-  console.log(req.body.input.data)
   try {
     const user = await User.signup({
       name,
@@ -27,16 +26,14 @@ router.post('/signup', async (req, res) => {
       role
     })
 
-    // console.log({ user })
+    const token = await AuthService.generateJwtToken(user)
+    const decodedToken = jwt.decode(token, { complete: true })
 
-    // const token = await AuthService.generateJwtToken(user)
-    // const decodedToken = jwt.decode(token, { complete: true })
-
-    // res.status(200).json({
-    //   token,
-    //   id: user.id,
-    //   exp: decodedToken ? decodedToken.payload.exp : null,
-    // })
+    res.status(200).json({
+      token,
+      id: user.id,
+      exp: decodedToken ? decodedToken.payload.exp : null,
+    })
     return res.status(200).send()
   } catch (e) {
     console.log(e)

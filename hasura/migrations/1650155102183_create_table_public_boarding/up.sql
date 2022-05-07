@@ -1,4 +1,4 @@
-CREATE TABLE "public"."boarding" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), "type" bpchar NOT NULL, "tour_id" uuid NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("tour_id") REFERENCES "public"."tour"("id") ON UPDATE restrict ON DELETE restrict, FOREIGN KEY ("type") REFERENCES "public"."boarding_type"("value") ON UPDATE restrict ON DELETE restrict, UNIQUE ("id"));
+CREATE TABLE "public"."boarding" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), "type" varchar NOT NULL, "tour_id" uuid NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("tour_id") REFERENCES "public"."tour"("id") ON UPDATE restrict ON DELETE restrict, FOREIGN KEY ("type") REFERENCES "public"."boarding_type"("value") ON UPDATE restrict ON DELETE restrict, UNIQUE ("id"));
 CREATE OR REPLACE FUNCTION "public"."set_current_timestamp_updated_at"()
 RETURNS TRIGGER AS $$
 DECLARE

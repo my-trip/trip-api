@@ -9,7 +9,7 @@ export class Person {
             variables: person
         })
 
-        return response.data as PersonModel
+        return response.data.insert_person_one as PersonModel
     }
 }
     

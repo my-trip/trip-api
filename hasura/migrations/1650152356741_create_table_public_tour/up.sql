@@ -1,4 +1,4 @@
-CREATE TABLE "public"."tour" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), "name" bpchar NOT NULL, "description" bpchar, "status" bpchar NOT NULL DEFAULT 'created', PRIMARY KEY ("id") , UNIQUE ("id"));
+CREATE TABLE "public"."tour" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), "name" varchar NOT NULL, "description" varchar, "status" varchar NOT NULL DEFAULT 'created', PRIMARY KEY ("id") , UNIQUE ("id"));
 CREATE OR REPLACE FUNCTION "public"."set_current_timestamp_updated_at"()
 RETURNS TRIGGER AS $$
 DECLARE

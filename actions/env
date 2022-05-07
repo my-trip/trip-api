@@ -6,3 +6,5 @@ JWT_KEY_ID=ckflcytkb000001mkhyj3gk7d
 APP_KEY=FANyYPC47qTfb6GjCRmPXQrJ
 ACTION_SECRET=secret
 ACTION_BASE_URL=http://actions:8081
+HASURA_SECRET=password
+HASURA_URL=http://hasura:8080/v1/graphql

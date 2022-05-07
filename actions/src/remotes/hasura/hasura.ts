@@ -2,9 +2,7 @@ import {
     ApolloClient,
     InMemoryCache,
     HttpLink,
-    split,
   } from '@apollo/client/core'
-  import { getMainDefinition } from '@apollo/client/utilities'
   import fetch from 'cross-fetch'
   
   const { HASURA_URL, HASURA_SECRET } = process.env
@@ -19,19 +17,9 @@ import {
     fetch,
   })
   
-  const link = split(
-    ({ query }) => {
-      const definition = getMainDefinition(query)
-      return (
-        definition.kind === 'OperationDefinition' &&
-        definition.operation === 'subscription'
-      )
-    },
-    httpLink
-  )
   
   const apolloClient = new ApolloClient({
-    link: link,
+    link: httpLink,
     cache: new InMemoryCache(),
     defaultOptions: {
       watchQuery: {

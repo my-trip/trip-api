@@ -6,7 +6,7 @@ import { AuthService } from "../services/auth"
 const router = Router()
 
 interface AuthParams {
-  username: string
+  email: string
   password: string
 }
 
@@ -71,10 +71,10 @@ function handleError(err, res: Response) {
 
 
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body.input.data as AuthParams
+  const { email, password } = req.body.input.data as AuthParams
   try {
     const { user, jwtToken, exp } = await AuthService.login(
-      username,
+      email,
       password
     )
 

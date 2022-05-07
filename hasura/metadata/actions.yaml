@@ -1,4 +1,11 @@
 actions:
+  - name: login
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/login'
+      headers:
+        - name: Authorization
+          value_from_env: ACTION_SECRET
   - name: signup
     definition:
       kind: synchronous
@@ -10,6 +17,8 @@ custom_types:
   enums: []
   input_objects:
     - name: SignupInput
+    - name: LoginInput
   objects:
     - name: SignupOutput
+    - name: LoginOutput
   scalars: []
