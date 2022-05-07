@@ -1,48 +1,46 @@
 import e, { Router, Response } from 'express'
-import { AuthService, User} from '../services'
+import { AuthService, User } from "../services"
+import jwt from 'jsonwebtoken'
 
 const router = Router()
-const validator = require('validator')
-const phone_regex = /^(\+\d{1,3}[- ]?)?\d{10,11}$/
-
-interface CustomerData {
-  name: string
-  birthdate: string
-  gender: string
-  document: string
-  document_type: string
-  user_id: number
-  business_name: string
-  phone: string
-  phone_type: string
-}
-
-interface BillingAccountData {
-  name: string
-  external_id: number
-  user_id: number
-}
 
 router.post('/signup', async (req, res) => {
   const {
     name,
     document_type,
+    document,
     email,
     password,
     birth,
     role
   } = req.body.input.data
 
+  console.log(req.body.input.data)
   try {
-    const encryptedPassword = AuthService.encryptPassword(password)
-
-    const user = await User.create({
-      password: encryptedPassword,
+    const user = await User.signup({
+      name,
+      document_type,
+      document,
       email,
+      password,
+      birth,
       role
     })
 
+    // console.log({ user })
+
+    // const token = await AuthService.generateJwtToken(user)
+    // const decodedToken = jwt.decode(token, { complete: true })
+
+    // res.status(200).json({
+    //   token,
+    //   id: user.id,
+    //   exp: decodedToken ? decodedToken.payload.exp : null,
+    // })
+    return res.status(200).send()
   } catch (e) {
+    console.log(e)
+    return res.status(400).send()
   }
 })
 

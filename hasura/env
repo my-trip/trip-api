@@ -8,3 +8,6 @@ HASURA_GRAPHQL_DATABASE_DATABASE=my-trip
 HASURA_GRAPHQL_DEV_MODE=true
 HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
 HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anonymous
+HASURA_GRAPHQL_JWT_SECRET={"jwk_url": "http://actions:8081/.well_known/jwks.json","claims_namespace_path": "$.data.hasura","claims_format": "json"}
+ACTION_BASE_URL=http://actions:8081
+ACTION_SECRET=secret

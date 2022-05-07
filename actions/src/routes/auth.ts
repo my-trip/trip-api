@@ -1,6 +1,7 @@
 
-  
+
 import { Router, Response } from 'express'
+import { AuthService } from "../services/auth"
 
 const router = Router()
 
@@ -68,57 +69,21 @@ function handleError(err, res: Response) {
   }
 }
 
-router.post('/refresh_token', async (req, res) => {
-  const { refresh_token, refreshToken } = req.body.input as RefreshParams
-
-  const token = refresh_token || refreshToken // Legacy support
-
-  try {
-    if (!token) {
-      throw Error('refresh_token ou refreshToken não podem ser nulos.')
-    }
-
-    const {
-      user,
-      jwtToken,
-      refreshToken,
-      exp,
-    } = await AuthService.refreshToken(token)
-
-    res.status(200).json({
-      id: user.id,
-      name: user.name,
-      roles: user.roles,
-      refresh_token: refreshToken,
-      refreshToken: refreshToken, // Legacy support
-      exp,
-      valid_until: exp.toString(), // Legacy support
-      token: jwtToken,
-      avatar: user.avatar,
-    })
-  } catch (e) {
-    handleError(e, res)
-  }
-})
 
 router.post('/login', async (req, res) => {
   const { username, password } = req.body.input.data as AuthParams
   try {
-    const { user, jwtToken, refreshToken, exp } = await AuthService.login(
+    const { user, jwtToken, exp } = await AuthService.login(
       username,
       password
     )
 
     res.status(200).json({
       id: user.id,
-      name: user.name,
-      roles: user.roles,
-      refresh_token: refreshToken,
-      refreshToken: refreshToken, // Legacy support
+      roles: user.role,
       exp,
       valid_until: exp.toString(), // Legacy support
       token: jwtToken,
-      avatar: user.avatar,
     })
   } catch (e) {
     handleError(e, res)
@@ -138,7 +103,7 @@ router.post('/validate_token', async (req, res) => {
       res.status(200).json({
         id: data.user_id,
         name: data.name,
-        roles: data.hasura['x-hasura-allowed-roles'],
+        // roles: data.hasura['x-hasura-allowed-roles'],
         exp: decodedToken.exp,
       })
     }

@@ -4,11 +4,10 @@ import {
     HttpLink,
     split,
   } from '@apollo/client/core'
-  import { WebSocketLink } from '@apollo/client/link/ws'
   import { getMainDefinition } from '@apollo/client/utilities'
   import fetch from 'cross-fetch'
   
-  const { HASURA_URL, HASURA_URL_WS, HASURA_SECRET } = process.env
+  const { HASURA_URL, HASURA_SECRET } = process.env
   
   const headers = {
     'x-hasura-admin-secret': HASURA_SECRET,
@@ -20,16 +19,6 @@ import {
     fetch,
   })
   
-  const wsLink = new WebSocketLink({
-    uri: HASURA_URL_WS as string,
-    options: {
-      reconnect: true,
-      connectionParams: {
-        headers,
-      },
-    },
-  })
-  
   const link = split(
     ({ query }) => {
       const definition = getMainDefinition(query)
@@ -38,7 +27,6 @@ import {
         definition.operation === 'subscription'
       )
     },
-    wsLink,
     httpLink
   )
   
