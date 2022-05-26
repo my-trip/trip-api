@@ -1,0 +1,18 @@
+
+
+body {
+  background: #f7a172 !important;
+  min-height: 100vh;
+  display: flex;
+  font-weight: 400;
+}
+
+.btn-default {
+    background-color: #fb5d00;
+}
+
+.card {
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+}
