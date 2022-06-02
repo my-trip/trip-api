@@ -1,23 +1,39 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
-import { createProvider } from './vue-apollo'
-import VueRouter from 'vue-router'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import '@/assets/css/main.css'
+import router from './router'
+import store from './store'
 
-import routes from '@/router'
+import CoreuiVue from '@coreui/vue'
+import CIcon from '@coreui/icons-vue'
+import { iconsSet as icons } from '@/assets/icons'
+import DocsCallout from '@/components/DocsCallout'
+import DocsExample from '@/components/DocsExample'
+import VueApolloComponents from '@vue/apollo-components'
+import { createApolloProvider } from '@vue/apollo-option'
 
-Vue.use(VueRouter)
+import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 
-const router = new VueRouter({
-  routes,
-  mode: 'history'
+const cache = new InMemoryCache()
+
+const apolloClient = new ApolloClient({
+  cache,
+  uri: 'http://localhost:4042/graphql',
 })
 
-Vue.config.productionTip = false
+const apolloProvider = createApolloProvider({
+  defaultClient: apolloClient,
+})
 
-new Vue({
-  router,
-  apolloProvider: createProvider(),
-  render: h => h(App)
-}).$mount('#app')
+const app = createApp(App)
+app.use(apolloProvider)
+app.use(VueApolloComponents)
+
+app.use(store)
+app.use(router)
+app.use(CoreuiVue)
+app.provide('icons', icons)
+app.component('CIcon', CIcon)
+app.component('DocsCallout', DocsCallout)
+app.component('DocsExample', DocsExample)
+
+app.mount('#app')
