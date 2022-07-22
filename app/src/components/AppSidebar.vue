@@ -12,16 +12,8 @@
     "
   >
     <CSidebarBrand>
-      <CIcon
-        custom-class-name="sidebar-brand-full"
-        :icon="logoNegative"
-        :height="35"
-      />
-      <CIcon
-        custom-class-name="sidebar-brand-narrow"
-        :icon="sygnet"
-        :height="35"
-      />
+      <h1 class="sidebar-brand-full">MyTrip</h1>
+      <h1 class="sidebar-brand-narrow">MT</h1>
     </CSidebarBrand>
     <AppSidebarNav />
     <CSidebarToggler

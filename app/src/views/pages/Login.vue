@@ -1,21 +1,22 @@
 <template>
   <div class="bg-light min-vh-100 d-flex flex-row align-items-center">
-    <CContainer>
+    <CContainer @login-error="loginError">
       <CRow class="justify-content-center">
         <CCol :md="8">
           <CCardGroup>
             <CCard class="p-4">
               <CCardBody>
                 <CForm>
-                  <h1>Login</h1>
-                  <p class="text-medium-emphasis">Sign In to your account</p>
+                  <h1>Bem vindo!</h1>
+                  <p class="text-medium-emphasis">Entre na suua conta</p>
                   <CInputGroup class="mb-3">
                     <CInputGroupText>
                       <CIcon icon="cil-user" />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Username"
-                      autocomplete="username"
+                      v-model="email"
+                      placeholder="exemplo@email.com"
+                      autocomplete="email"
                     />
                   </CInputGroup>
                   <CInputGroup class="mb-4">
@@ -23,18 +24,27 @@
                       <CIcon icon="cil-lock-locked" />
                     </CInputGroupText>
                     <CFormInput
+                      v-model="password"
                       type="password"
                       placeholder="Password"
                       autocomplete="current-password"
                     />
                   </CInputGroup>
+                  <CAlert
+                    color="danger"
+                    :visible="liveExampleVisible"
+                    dismissible
+                    @close="
+                      () => {
+                        liveExampleVisible = false
+                      }
+                    "
+                    >{{ errorMessage }}</CAlert
+                  >
                   <CRow>
                     <CCol :xs="6">
-                      <CButton color="primary" class="px-4"> Login </CButton>
-                    </CCol>
-                    <CCol :xs="6" class="text-right">
-                      <CButton color="link" class="px-0">
-                        Forgot password?
+                      <CButton @click="login" color="primary" class="px-4">
+                        Entrar
                       </CButton>
                     </CCol>
                   </CRow>
@@ -44,14 +54,12 @@
             <CCard class="text-white bg-primary py-5" style="width: 44%">
               <CCardBody class="text-center">
                 <div>
-                  <h2>Sign up</h2>
+                  <h2>MyTrip</h2>
                   <p>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
                   </p>
                   <CButton color="light" variant="outline" class="mt-3">
-                    Register Now!
+                    Cadastre-se
                   </CButton>
                 </div>
               </CCardBody>
@@ -64,10 +72,32 @@
 </template>
 
 <script>
+import Auth from '@/mixins/auth'
+
 export default {
   name: 'Login',
-  apollo: {
-    teste: 
-  }
+  mixins: [Auth],
+  data: function () {
+    return {
+      email: '',
+      password: '',
+      errorMessage: '',
+      liveExampleVisible: false,
+    }
+  },
+  methods: {
+    loginError(a) {
+      console.log('aaaaaaaaaaaaaaaaaaaa')
+      console.log(a)
+    },
+    async login() {
+      try {
+        await this.signIn({ email: this.email, password: this.password })
+      } catch (e) {
+        this.liveExampleVisible = true
+        this.errorMessage = e.message
+      }
+    },
+  },
 }
 </script>

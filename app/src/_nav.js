@@ -6,18 +6,23 @@ export default [
     icon: 'cil-speedometer',
     badge: {
       color: 'primary',
-      text: 'NEW',
     },
   },
   {
     component: 'CNavTitle',
-    name: 'Theme',
+    name: 'Agência',
   },
   {
     component: 'CNavItem',
-    name: 'Colors',
+    name: 'Editar Agência',
     to: '/theme/colors',
-    icon: 'cil-drop',
+    icon: 'cil-pen',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Gerênciar Usuários',
+    to: '/theme/colors',
+    icon: 'cil-user',
   },
   {
     component: 'CNavItem',
@@ -277,21 +282,20 @@ export default [
       },
     ],
   },
-
-  // {
-  //   component: 'CNavItem',
-  //   name: 'Download CoreUI',
-  //   href: 'http://coreui.io/vue/',
-  //   icon: { name: 'cil-cloud-download', class: 'text-white' },
-  //   _class: 'bg-success text-white',
-  //   target: '_blank'
-  // },
-  // {
-  //   component: 'CNavItem',
-  //   name: 'Try CoreUI PRO',
-  //   href: 'http://coreui.io/pro/vue/',
-  //   icon: { name: 'cil-layers', class: 'text-white' },
-  //   _class: 'bg-danger text-white',
-  //   target: '_blank'
-  // }
+  {
+    component: 'CNavItem',
+    name: 'Download CoreUI',
+    href: 'http://coreui.io/vue/',
+    icon: { name: 'cil-cloud-download', class: 'text-white' },
+    _class: 'bg-success text-white',
+    target: '_blank',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Try CoreUI PRO',
+    href: 'http://coreui.io/pro/vue/',
+    icon: { name: 'cil-layers', class: 'text-white' },
+    _class: 'bg-danger text-white',
+    target: '_blank',
+  },
 ]
