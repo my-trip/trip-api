@@ -1,30 +1,40 @@
 import e, { Router, Response } from 'express'
-import { AuthService, User } from "../services"
+import { AuthService, User, Agency } from "../services"
 import jwt from 'jsonwebtoken'
 
 const router = Router()
 
 router.post('/signup', async (req, res) => {
+
+
   const {
     name,
-    document_type,
-    document,
-    email,
-    password,
-    birth,
-    role
+    description,
+    person: {
+      name: personName,
+      document,
+      document_type,
+    },
+    user: {
+      email,
+      password,
+    }
   } = req.body.input.data
 
   try {
-    const user = await User.signup({
+    const agency = await Agency.create({
       name,
-      document_type,
+      description,
       document,
       email,
       password,
-      birth,
-      role
+      personName,
+      documentType: document_type,
     })
+    const agencyManagers = agency.agency_managers
+
+    const agencyManager = agencyManagers[0]
+    const { user } = agencyManager
 
     const token = await AuthService.generateJwtToken(user)
     const decodedToken = jwt.decode(token, { complete: true })
@@ -34,6 +44,7 @@ router.post('/signup', async (req, res) => {
       id: user.id,
       exp: decodedToken ? decodedToken.payload.exp : null,
     })
+
     return res.status(200).send()
   } catch (e) {
     console.log(e)

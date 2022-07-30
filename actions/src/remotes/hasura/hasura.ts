@@ -17,7 +17,6 @@ import {
     fetch,
   })
   
-  
   const apolloClient = new ApolloClient({
     link: httpLink,
     cache: new InMemoryCache(),

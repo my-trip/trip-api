@@ -5,62 +5,62 @@ import { AuthService, Person } from './'
 
 
 interface signupProps {
-    name: string
-    role: string
-    email: string
-    document: string
-    document_type: string
-    password: string
-    birth: string
+	name: string
+	role: string
+	email: string
+	document: string
+	document_type: string
+	password: string
+	birth?: string
 }
 
 
 export class User {
-    static async create(user: UserModel): Promise<UserModel> {
-        try {
-            const response = await HasuraService.mutate({
-                mutation: INSERT_USER,
-                variables: user
-            })
+	static async create(user: UserModel): Promise<UserModel> {
+		try {
+			const response = await HasuraService.mutate({
+				mutation: INSERT_USER,
+				variables: user
+			})
 
-            return response.data.insert_user_one as UserModel
-        } catch (e) {
-            console.log(e)
-            throw e
-        }
+			return response.data.insert_user_one as UserModel
+		} catch (e) {
+			console.log(e)
+			throw e
+		}
 
-    }
+	}
 
-    static async signup({
-        birth,
-        document_type,
-        document,
-        email,
-        name,
-        password,
-        role
-    }: signupProps): Promise<UserModel> {
-        try {
-            const encryptedPassword = AuthService.encryptPassword(password)
+	static async signup({
+		birth,
+		document_type,
+		document,
+		email,
+		name,
+		password,
+		role
+	}: signupProps): Promise<UserModel> {
+		try {
+			const encryptedPassword = AuthService.encryptPassword(password)
 
-            const user = await User.create({
-                password: encryptedPassword,
-                email,
-                role
-            })
+			const user = await User.create({
+				password: encryptedPassword,
+				email,
+				role
+			})
 
-            await Person.create({
-                birth,
-                document,
-                document_type,
-                name
-            })
+			await Person.create({
+				birth,
+				document,
+				document_type,
+				name
+			})
 
-            return user
-        } catch (e) {
-            console.log({ e })
-            throw e
-        }
+			return user
+		} catch (e) {
+			console.log({ e })
+			throw e
+		}
 
-    }
+	}
 }
