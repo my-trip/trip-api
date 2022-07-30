@@ -12,12 +12,9 @@ type Mutation {
 
 input SignupInput {
   name: String!
-  document_type: String!
-  document: String!
-  email: String!
-  password: String!
-  birth: String!
-  role: String
+  description: String!
+  person: jsonb!
+  user: jsonb!
 }
 
 input LoginInput {

@@ -6,7 +6,7 @@
           <CCard class="mx-0">
             <CCardBody class="p-4">
               <h1>Cadastro</h1>
-              <AgencyRegisterForm />
+              <AgencyRegisterForm  @register-submit="submit" />
             </CCardBody>
           </CCard>
         </CCol>
@@ -23,5 +23,10 @@ export default {
   components: {
     AgencyRegisterForm,
   },
+  methods: {
+    submit: function (event) {
+      console.log(event)
+    }
+  }
 }
 </script>
