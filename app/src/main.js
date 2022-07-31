@@ -13,6 +13,7 @@ import { createApolloProvider } from '@vue/apollo-option'
 
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 
+
 const cache = new InMemoryCache()
 
 const apolloClient = new ApolloClient({

@@ -6,6 +6,8 @@ actions:
       headers:
         - name: Authorization
           value_from_env: ACTION_SECRET
+    permissions:
+      - role: anonymous
   - name: signup
     definition:
       kind: synchronous
@@ -13,6 +15,8 @@ actions:
       headers:
         - name: Authorization
           value_from_env: ACTION_SECRET
+    permissions:
+      - role: anonymous
 custom_types:
   enums: []
   input_objects:
