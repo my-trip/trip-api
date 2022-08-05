@@ -77,9 +77,11 @@ router.post('/login', async (req, res) => {
       email,
       password
     )
-
     res.status(200).json({
       id: user.id,
+      name: user.person?.name,
+      agency_name: user.agency_manager?.agency?.name,
+      email: user.email,
       roles: user.role,
       exp,
       valid_until: exp.toString(), // Legacy support

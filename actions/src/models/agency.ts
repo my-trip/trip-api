@@ -4,6 +4,7 @@ export interface AgencyManager {
     id?: string
     isAdmin?: boolean
     user: User
+    agency?: Agency
     created_at?: string
     updated_at?: string
 }

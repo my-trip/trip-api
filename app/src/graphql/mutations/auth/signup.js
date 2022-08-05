@@ -6,6 +6,9 @@ export const SIGIN = gql`
       id
       exp
       token
+      name
+      agency_name
+      email
     }
   }
 `

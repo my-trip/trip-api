@@ -7,6 +7,16 @@ export const USER_BY_EMAIL = gql`
       role
       email
       password
+      email
+      agency_manager {
+        agency {
+          id
+          name
+        }
+      }
+      person {
+        name
+      }
     }
   }
 `

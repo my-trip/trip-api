@@ -9,21 +9,8 @@ import { iconsSet as icons } from '@/assets/icons'
 import DocsCallout from '@/components/DocsCallout'
 import DocsExample from '@/components/DocsExample'
 import VueApolloComponents from '@vue/apollo-components'
-import { createApolloProvider } from '@vue/apollo-option'
 
-import { ApolloClient, InMemoryCache } from '@apollo/client/core'
-
-
-const cache = new InMemoryCache()
-
-const apolloClient = new ApolloClient({
-  cache,
-  uri: 'http://localhost:8080/v1/graphql',
-})
-
-const apolloProvider = createApolloProvider({
-  defaultClient: apolloClient,
-})
+import { apolloProvider } from './vue-apollo'
 
 const app = createApp(App)
 app.use(apolloProvider)

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.6",
+    "@braid/vue-formulate": "^2.5.3",
     "@coreui/chartjs": "^3.0.0",
     "@coreui/coreui": "^4.1.0",
     "@coreui/icons": "^2.1.0",

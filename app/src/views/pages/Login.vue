@@ -1,6 +1,6 @@
 <template>
   <div class="bg-light min-vh-100 d-flex flex-row align-items-center">
-    <CContainer @login-error="loginError">
+    <CContainer>
       <CRow class="justify-content-center">
         <CCol :md="8">
           <CCardGroup>
@@ -86,14 +86,11 @@ export default {
     }
   },
   methods: {
-    loginError(a) {
-      console.log('aaaaaaaaaaaaaaaaaaaa')
-      console.log(a)
-    },
     async login() {
       try {
         await this.signIn({ email: this.email, password: this.password })
       } catch (e) {
+        console.log(e)
         this.liveExampleVisible = true
         this.errorMessage = e.message
       }

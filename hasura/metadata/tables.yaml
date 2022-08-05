@@ -250,11 +250,12 @@
           insertion_order: null
           column_mapping:
             id: user_id
-  array_relationships:
     - name: person
       using:
-        foreign_key_constraint_on:
-          column: user_id
-          table:
+        manual_configuration:
+          remote_table:
             schema: public
             name: person
+          insertion_order: null
+          column_mapping:
+            id: user_id

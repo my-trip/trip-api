@@ -971,6 +971,19 @@
   "resolved" "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   "version" "0.2.3"
 
+"@braid/vue-formulate-i18n@^1.16.0":
+  "integrity" "sha512-CuX1kN7bWg4ukynnTS3LGsmPKrUvS2Wh75zKatIe+nHQQy0gSvfmggQsCz4QZey7Ois+pGYmOIgrE1SvX+zQTw=="
+  "resolved" "https://registry.npmjs.org/@braid/vue-formulate-i18n/-/vue-formulate-i18n-1.16.0.tgz"
+  "version" "1.16.0"
+
+"@braid/vue-formulate@^2.5.3":
+  "integrity" "sha512-HdyslHKkzJAtMiD2BP0PfQ8/BaRs1NPlWA8DhgL4ImR/1tuzQLrZButVIqWiucfRitfrgeWz5qrByZs8zp5vFw=="
+  "resolved" "https://registry.npmjs.org/@braid/vue-formulate/-/vue-formulate-2.5.3.tgz"
+  "version" "2.5.3"
+  dependencies:
+    "@braid/vue-formulate-i18n" "^1.16.0"
+    "is-plain-object" "^3.0.1"
+
 "@coreui/chartjs@^3.0.0":
   "integrity" "sha512-udbvSxanTNltv94lqTMW8bLRXTtzk9G2SrmFdM/7HH+JSaLX2wdQpZ4VIJhyOCRGLCSKHktl29BnW1/uXQecAg=="
   "resolved" "https://registry.npmjs.org/@coreui/chartjs/-/chartjs-3.0.0.tgz"
@@ -5134,6 +5147,11 @@
   "version" "2.0.4"
   dependencies:
     "isobject" "^3.0.1"
+
+"is-plain-object@^3.0.1":
+  "integrity" "sha512-Xnpx182SBMrr/aBik8y+GuR4U1L9FqMSojwDQwPMmxyC6bvEqly9UBCxhauBF5vNh2gwWJNX6oDV7O+OM4z34g=="
+  "resolved" "https://registry.npmjs.org/is-plain-object/-/is-plain-object-3.0.1.tgz"
+  "version" "3.0.1"
 
 "is-potential-custom-element-name@^1.0.1":
   "integrity" "sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ=="

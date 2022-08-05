@@ -45,10 +45,8 @@ export default {
   methods: {
     submit: async function (submitData) {
       try {
-        await this.signUp(submitData)
-        
+        await this.signUp(submitData)  
       } catch (e) {
-        console.log(e)
         this.liveExampleVisible = true
         this.errorMessage = e.message
       }
