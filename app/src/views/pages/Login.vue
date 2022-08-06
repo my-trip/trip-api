@@ -6,41 +6,27 @@
           <CCardGroup>
             <CCard class="p-4">
               <CCardBody>
-                <CForm>
+                <CForm @submit="login">
                   <h1>Bem vindo!</h1>
                   <p class="text-medium-emphasis">Entre na suua conta</p>
                   <CInputGroup class="mb-3">
                     <CInputGroupText>
                       <CIcon icon="cil-user" />
                     </CInputGroupText>
-                    <CFormInput
-                      v-model="email"
-                      placeholder="exemplo@email.com"
-                      autocomplete="email"
-                    />
+                    <CFormInput v-model="email" placeholder="exemplo@email.com" autocomplete="email" />
                   </CInputGroup>
                   <CInputGroup class="mb-4">
                     <CInputGroupText>
                       <CIcon icon="cil-lock-locked" />
                     </CInputGroupText>
-                    <CFormInput
-                      v-model="password"
-                      type="password"
-                      placeholder="Password"
-                      autocomplete="current-password"
-                    />
+                    <CFormInput v-model="password" type="password" placeholder="Password"
+                      autocomplete="current-password" />
                   </CInputGroup>
-                  <CAlert
-                    color="danger"
-                    :visible="liveExampleVisible"
-                    dismissible
-                    @close="
-                      () => {
-                        liveExampleVisible = false
-                      }
-                    "
-                    >{{ errorMessage }}</CAlert
-                  >
+                  <CAlert color="danger" :visible="liveExampleVisible" dismissible @close="
+                    () => {
+                      liveExampleVisible = false
+                    }
+                  ">{{ errorMessage }}</CAlert>
                   <CRow>
                     <CCol :xs="6">
                       <CButton @click="login" color="primary" class="px-4">
@@ -86,9 +72,16 @@ export default {
     }
   },
   methods: {
-    async login() {
+    async login(event) {
       try {
+        event.preventDefault()
+        event.stopPropagation()
+
         await this.signIn({ email: this.email, password: this.password })
+
+        const redirect = this.$route.query.redirect || "dashboard"
+
+        this.$router.push({ path: redirect })
       } catch (e) {
         console.log(e)
         this.liveExampleVisible = true
