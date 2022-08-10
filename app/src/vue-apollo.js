@@ -2,7 +2,7 @@ import { createApolloProvider } from '@vue/apollo-option'
 import { setContext } from '@apollo/client/link/context';
 
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client/core'
-
+import { getStorageItem, setStorageItem, deleteStorageItem } from './utils/storage'
 const cache = new InMemoryCache()
 
 const httpLink = createHttpLink({
@@ -11,7 +11,7 @@ const httpLink = createHttpLink({
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
-  const token = localStorage.getItem('token');
+  const token = getStorageItem('token');
   // return the headers to the context so httpLink can read them
 
   if (token) {
@@ -31,12 +31,10 @@ const apolloProvider = createApolloProvider({
 })
 
 async function onLogin(data) {
-  if (typeof localStorage !== 'undefined' && data.token) {
-    localStorage.setItem('token', data.token)
-    localStorage.setItem('name', data.name)
-    localStorage.setItem('agencyName', data.agency_name)
-    localStorage.setItem('email',data.email)
-  }
+  setStorageItem('token', data.token)
+  setStorageItem('name', data.name)
+  setStorageItem('agencyName', data.agency_name)
+  setStorageItem('email', data.email)
   try {
     await apolloClient.resetStore()
   } catch (e) {
@@ -47,9 +45,10 @@ async function onLogin(data) {
 
 // Manually call this when user log out
 async function onLogout() {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.removeItem('token')
-  }
+  deleteStorageItem('token')
+  deleteStorageItem('name')
+  deleteStorageItem('agencyName')
+  deleteStorageItem('email')
   try {
     await apolloClient.resetStore()
   } catch (e) {

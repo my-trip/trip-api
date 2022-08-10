@@ -50,7 +50,11 @@
                 </div>
               </CCardBody>
             </CCard>
+            <div>
+              <autocomplete v-model="test" :items="items" />
+            </div>
           </CCardGroup>
+
         </CCol>
       </CRow>
     </CContainer>
@@ -59,16 +63,30 @@
 
 <script>
 import Auth from '@/mixins/auth'
+import autocomplete from 'vue-autocomplete-input-tag'
 
 export default {
   name: 'Login',
   mixins: [Auth],
+  components: {
+    autocomplete,
+  },
   data: function () {
     return {
       email: '',
       password: '',
       errorMessage: '',
       liveExampleVisible: false,
+      test: "",
+      items: [
+        "Banana",
+        "Strawberry",
+        "Orange",
+        "Lemon",
+        "Pineapple",
+        "Watermelon",
+        "Melon",
+      ],
     }
   },
   methods: {
@@ -91,3 +109,39 @@ export default {
   },
 }
 </script>
+
+<style>
+input {
+  width: 100%;
+  border: 1px solid #ccc;
+  color: #666;
+  border-radius: 10px;
+  outline: none;
+  padding: 9px 14px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.vue-autocomplete-input-tag-items {
+  border: 1px solid #ccc;
+  max-height: 200px;
+  margin-top: 8px;
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  overflow: auto;
+}
+
+.vue-autocomplete-input-tag-item {
+  padding: 6px 16px;
+  color: #4a4a4a;
+  max-width: 100%;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+}
+
+.vue-autocomplete-input-tag-item:hover {
+  background-color: #e8e8e8;
+}
+</style>

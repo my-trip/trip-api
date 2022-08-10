@@ -60,6 +60,20 @@
             name: boarding
 - table:
     schema: public
+    name: city
+- table:
+    schema: public
+    name: country
+  array_relationships:
+    - name: states
+      using:
+        foreign_key_constraint_on:
+          column: country_id
+          table:
+            schema: public
+            name: state
+- table:
+    schema: public
     name: document_type
   is_enum: true
   array_relationships:
@@ -202,6 +216,13 @@
           table:
             schema: public
             name: purchase
+- table:
+    schema: public
+    name: state
+  object_relationships:
+    - name: country
+      using:
+        foreign_key_constraint_on: country_id
 - table:
     schema: public
     name: tour
