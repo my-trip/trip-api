@@ -18,6 +18,11 @@ export default [
 					import(/* webpackChunkName: "dashboard" */ '@/views/Dashboard.vue'),
 			},
 			{
+				path: '/tour/new',
+				name: 'NewTour',
+				component: () => import('@/views/pages/authenticated/tour/NewTour.vue'),
+			},
+			{
 				path: '/theme',
 				name: 'Theme',
 				redirect: '/theme/typography',

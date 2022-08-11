@@ -14,11 +14,18 @@ const authLink = setContext((_, { headers }) => {
   const token = getStorageItem('token');
   // return the headers to the context so httpLink can read them
 
+  const newHeadersValue = {}
+
   if (token) {
-    headers.authorization = `Bearer ${token}`
+    newHeadersValue.Authorization = `Bearer ${token}`
   }
 
-  return headers
+  return {
+    headers: {
+      ...headers,
+      ...newHeadersValue
+    }
+  }
 });
 
 const apolloClient = new ApolloClient({

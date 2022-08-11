@@ -72,6 +72,16 @@
           table:
             schema: public
             name: state
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - bacen
+          - id
+          - initials
+          - name
+          - name_pt
+        filter: {}
 - table:
     schema: public
     name: document_type

@@ -21,7 +21,7 @@ export default [
   {
     component: 'CNavItem',
     name: 'Criar Excursão',
-    to: '/theme/colors',
+    to: '/tour/new',
     icon: 'cil-calculator',
   },
   {
