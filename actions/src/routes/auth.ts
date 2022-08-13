@@ -72,11 +72,13 @@ function handleError(err, res: Response) {
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body.input.data as AuthParams
+
   try {
     const { user, jwtToken, exp } = await AuthService.login(
       email,
       password
     )
+    console.log({ user })
     res.status(200).json({
       id: user.id,
       name: user.person?.name,
@@ -88,6 +90,7 @@ router.post('/login', async (req, res) => {
       token: jwtToken,
     })
   } catch (e) {
+    console.log(e)
     handleError(e, res)
   }
 })
