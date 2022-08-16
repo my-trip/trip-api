@@ -1,23 +1,29 @@
 <template>
 	<div class="row">
 		<h5>Destino</h5>
-		<div class="col-md-4">
+		<AdressForm @change-address="changeBoardingAddress"/>
+	</div>
+
+	<div class="row mt-4">
+		<h5>Embarque</h5>
+		<p class="text-medium-emphasis small"> Após a criação da excursão, novos embarques podem ser cadastrados</p>
+		<CFormInput  id="exampleFormControlInput1" type="datetime-local" />
+		<!-- <div class="col-md-4">
 			<CFormLabel>País</CFormLabel>
 			<autocomplete permitArbitraryValues v-model="selectedCountry" :items="country" :returned="['id', 'name_pt']"
 				displayed="name_pt" />
 		</div>
-		<div class="col-md-4">
+		<div v-if="isNational" class="col-md-4">
 			<CFormLabel>Estado</CFormLabel>
 			<autocomplete permitArbitraryValues v-model="selectedState" :items="state" :returned="['id', 'name']"
 				displayed="name" />
 		</div>
-		<div class="col-md-4">
+		<div v-if="isNational" class="col-md-4">
 			<CFormLabel>Cidade</CFormLabel>
 			<autocomplete permitArbitraryValues v-model="selectedCity" :items="city" :returned="['id', 'name']"
 				displayed="name" />
-		</div>
+		</div> -->
 	</div>
-
 	<CForm class="g-3 mt-4">
 		<div class="row">
 			<div class="col-md-12">
@@ -35,8 +41,8 @@
 					<CInputGroupText>
 						<CIcon icon="cil-info" />
 					</CInputGroupText>
-					<CFormTextarea v-model="form.description" id="exampleFormControlTextarea1" label="Example textarea" rows="3"
-						placeholder="Sobre a agência" text="Must be 8-20 words long."></CFormTextarea>
+					<CFormTextarea v-model="form.description" id="exampleFormControlTextarea1" label="Example textarea"
+						rows="3" placeholder="Sobre a agência" text="Must be 8-20 words long."></CFormTextarea>
 				</CInputGroup>
 			</div>
 		</div>
@@ -48,68 +54,25 @@
 </template>
 
 <script>
-import { GET_COUNTRY } from '@/graphql/queries/country/getCountry.js'
-import { GET_STATE_BY_COUNTRY_ID } from '@/graphql/queries/state/getState.js'
-import { GET_CITY_BY_STATE_ID } from '@/graphql/queries/city/getCity.js'
-import Autocomplete from 'vue-autocomplete-input-tag'
-
+import AdressForm from '../address/Address.vue'
 export default {
 	name: 'NewTourForm',
 	components: {
-		Autocomplete
-	},
-	apollo: {
-		country: {
-			query: GET_COUNTRY
-		},
-		state: {
-			query: GET_STATE_BY_COUNTRY_ID,
-			variables: {
-				countryId: 0
-			}
-		},
-		city: {
-			query: GET_CITY_BY_STATE_ID,
-			variables: {
-				stateId: 0
-			}
-		},
+		AdressForm
 	},
 	data: function () {
 		return {
-			country: [],
-			state: [],
-			city: [],
-			countryId: 1,
-			selectedCountry: {},
-			selectedState: {},
-			selectedCity: {},
-			validatedCustom01: null,
+			boarding: null,
 			form: {
 				name: "",
 				description: ""
 			}
 		}
 	},
-	watch: {
-		'selectedCountry'(newValue) {
-			const value = newValue && newValue.id && newValue.id == 1 ? 1 : 0
-			this.selectedState = {}
-			this.$apollo.queries.state.refetch({
-				countryId: value
-			})
-
-		},
-		'selectedState'(newValue) {
-			this.selectedCity = {}
-			if (newValue && newValue.id) {
-				this.$apollo.queries.city.refetch({
-					stateId: newValue.id
-				})
-			}
-		}
-	},
 	methods: {
+		changeBoardingAddress: function (event) {
+			this.boarding = event
+		},
 		handleSubmit(event) {
 			const formEvent = event.currentTarget
 			event.preventDefault()

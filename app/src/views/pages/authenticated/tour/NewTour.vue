@@ -18,6 +18,7 @@
 // import AgencyRegisterForm from '@/views/forms/agency/register.vue'
 // import Auth from '@/mixins/auth'
 import NewTourForm from "@/views/forms/tour/NewTour.vue"
+import cep from 'cep-promise'
 
 export default {
 	name: 'NewTour',
@@ -25,6 +26,11 @@ export default {
 	components: {
 		NewTourForm,
 	},
+	mounted () {
+		cep("29060290").then( value => {
+			console.log(value)
+		})
+	}
 	//   data: function () {
 	//     return {
 	//       registred: false
