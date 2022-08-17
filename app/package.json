@@ -33,6 +33,7 @@
     "@coreui/vue-chartjs": "2.0.0",
     "@vue/apollo-components": "^4.0.0-alpha.17",
     "@vue/apollo-option": "^4.0.0-alpha.17",
+    "cep-promise": "^4.2.0",
     "core-js": "^3.19.0",
     "graphql": "^16.5.0",
     "graphql-tag": "^2.12.6",
@@ -41,6 +42,8 @@
     "vue-autosuggest": "^2.2.0",
     "vue-router": "^4.0.12",
     "vue-search-select": "^2.9.5",
+    "vue-upload-drop-images": "^1.0.7",
+    "vue-viacep": "^1.0.4",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

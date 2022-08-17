@@ -2903,6 +2903,14 @@
   "resolved" "https://registry.npmjs.org/caseless/-/caseless-0.12.0.tgz"
   "version" "0.12.0"
 
+"cep-promise@^4.2.0":
+  "integrity" "sha512-mJ8Wyd33ItahNJB2wFgJfeP80UyBzzVPK+WTlhaqmPnwzCPy8XY0b4ftHAwp/PrxjAux7aXxVc+uWQ9Rtvl/TA=="
+  "resolved" "https://registry.npmjs.org/cep-promise/-/cep-promise-4.2.0.tgz"
+  "version" "4.2.0"
+  dependencies:
+    "node-fetch" "2.6.7"
+    "unfetch" "4.1.0"
+
 "chalk@^2.0.0", "chalk@^2.1.0", "chalk@^2.3.0":
   "integrity" "sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ=="
   "resolved" "https://registry.npmjs.org/chalk/-/chalk-2.4.2.tgz"
@@ -6334,10 +6342,10 @@
     "lower-case" "^2.0.2"
     "tslib" "^2.0.3"
 
-"node-fetch@^2.6.1":
-  "integrity" "sha512-Z8/6vRlTUChSdIgMa51jxQ4lrw/Jy5SOW10ObaA47/RElsAN2c5Pn8bTgFGWn/ibwzXTE8qwr1Yzx28vsecXEA=="
-  "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.6.tgz"
-  "version" "2.6.6"
+"node-fetch@^2.6.1", "node-fetch@2.6.7":
+  "integrity" "sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ=="
+  "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz"
+  "version" "2.6.7"
   dependencies:
     "whatwg-url" "^5.0.0"
 
@@ -8409,6 +8417,11 @@
   dependencies:
     "is-typedarray" "^1.0.0"
 
+"unfetch@4.1.0":
+  "integrity" "sha512-crP/n3eAPUJxZXM9T80/yv0YhkTEx2K1D3h7D1AJM6fzsWZrxdyRuLN0JH/dkZh1LNH8LxCnBzoPFCPbb2iGpg=="
+  "resolved" "https://registry.npmjs.org/unfetch/-/unfetch-4.1.0.tgz"
+  "version" "4.1.0"
+
 "unicode-canonical-property-names-ecmascript@^2.0.0":
   "integrity" "sha512-yY5PpDlfVIU5+y/BSCxAJRBIS1Zc2dDG3Ujq+sR0U+JjUevW2JhocOF+soROYDSaAezOzOKuyyixhD6mBknSmQ=="
   "resolved" "https://registry.npmjs.org/unicode-canonical-property-names-ecmascript/-/unicode-canonical-property-names-ecmascript-2.0.0.tgz"
@@ -8596,6 +8609,16 @@
   "integrity" "sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw=="
   "resolved" "https://registry.npmjs.org/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
+
+"vue-upload-drop-images@^1.0.7":
+  "integrity" "sha512-O1G+iy0oTK9EaD6XHI5vjZQzdy+PeVCui7ty5Ja8ipw3bBWcY1o5+7JxofMZSXPQbr++Go0hWHtyb7xwQZOpQA=="
+  "resolved" "https://registry.npmjs.org/vue-upload-drop-images/-/vue-upload-drop-images-1.0.7.tgz"
+  "version" "1.0.7"
+
+"vue-viacep@^1.0.4":
+  "integrity" "sha512-lU12N3u8gdYv2G/k1CXFD3hfEqNFrQkVeVKpNvuCfH3ulHoWoqSSRpLLxqXR/Z99goSqy816ZIocO/4WWIgqZA=="
+  "resolved" "https://registry.npmjs.org/vue-viacep/-/vue-viacep-1.0.4.tgz"
+  "version" "1.0.4"
 
 "vue@^2 || ^3.2.13", "vue@^3.0.0", "vue@^3.0.0-0", "vue@^3.0.1", "vue@^3.0.2", "vue@^3.1.0", "vue@^3.2.20", "vue@^3.2.21", "vue@^3.2.23", "vue@>= 2.5.0", "vue@3.2.23", "vue@3.x.x":
   "integrity" "sha512-MGp9JZC37lzGhwSu6c1tQxrQbXbw7XKFqtYh7SFwNrNK899FPxGAHwSHMZijMChTSC3uZrD2BGO/3EHOgMJ0cw=="

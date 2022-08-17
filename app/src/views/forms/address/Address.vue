@@ -1,6 +1,6 @@
 <template>
 	<div class="row">
-		<div class="col-md-4">
+		<div v-if="isBoarding" class="col-md-4">
 			<CFormLabel>País</CFormLabel>
 			<autocomplete permitArbitraryValues v-model="address.country" :items="country" :returned="['id', 'name_pt']"
 				displayed="name_pt" />
@@ -15,19 +15,19 @@
 			<autocomplete permitArbitraryValues v-model="address.city" :items="city" :returned="['id', 'name']"
 				displayed="name" />
 		</div>
-		<div v-if="isNational" class="col-md-4">
+		<div v-if="isNational && !isBoarding" class="col-md-4">
 			<CFormLabel>CEP</CFormLabel>
 			<CFormInput v-model="address.zipCode" required placeholder="CEP" autocomplete="nome" />
 		</div>
-		<div v-if="isNational" class="col-md-4">
+		<div v-if="isNational && !isBoarding" class="col-md-4">
 			<CFormLabel>Bairro</CFormLabel>
 			<CFormInput v-model="address.neighborhood" required placeholder="Bairro" autocomplete="nome" />
 		</div>
-		<div v-if="isNational" class="col-md-4">
+		<div v-if="isNational && !isBoarding" class="col-md-4">
 			<CFormLabel>Rua</CFormLabel>
 			<CFormInput v-model="address.street" required placeholder="Rua" autocomplete="nome" />
 		</div>
-		<div v-if="isNational" class="col-md-4">
+		<div v-if="isNational && !isBoarding" class="col-md-4">
 			<CFormLabel>Referência</CFormLabel>
 			<CFormInput v-model="address.reference" required placeholder="Ponto de referência" autocomplete="nome" />
 		</div>
@@ -45,6 +45,12 @@ export default {
 	components: {
 		Autocomplete
 	},
+	props: {
+		isBoarding: {
+			type: Boolean,
+			default: false
+		}
+	},
 	apollo: {
 		country: {
 			query: GET_COUNTRY
@@ -52,7 +58,7 @@ export default {
 		state: {
 			query: GET_STATE_BY_COUNTRY_ID,
 			variables: {
-				countryId: 0
+				countryId: 1
 			}
 		},
 		city: {
@@ -83,7 +89,7 @@ export default {
 				reference: null
 			},
 			validatedCustom01: null,
-			isNational: false,
+			isNational: true,
 
 		}
 	},
