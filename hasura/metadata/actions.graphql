@@ -25,7 +25,6 @@ input LoginInput {
 type SignupOutput {
   token: String!
   id: uuid!
-  exp: Int!
 }
 
 type LoginOutput {
@@ -34,6 +33,5 @@ type LoginOutput {
   name: String!
   agency_name: String!
   email: String!
-  exp: Int!
 }
 

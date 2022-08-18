@@ -28,13 +28,13 @@ export interface DecodedToken {
   uid: number
   data: TokenUserData
   iat: number
-  exp: number
+  exp?: number
 }
 
 interface AuthData {
   user: UserModel
   jwtToken: string
-  exp: number
+  exp?: number
 }
 
 interface JWK {
@@ -62,19 +62,22 @@ export class AuthService {
   public static async generateJwtToken(user: UserModel): Promise<string> {
     const { id, role } = user
 
+    const agencyId = user.agency_manager?.agency?.id ? user.agency_manager?.agency?.id : null
+    
     const userTokenData = {
       user_id: id,
       hasura: pickBy({
         'x-hasura-allowed-roles': [role],
         'x-hasura-default-role': role,
         'x-hasura-user-id': user.id?.toString(),
+        'x-hasura-agency-id': agencyId
         // eslint-disable-next-line camelcase
       }),
     }
 
     return jwt.sign({ uuid: user.id, data: userTokenData }, privateKeyBuffer, {
       algorithm: 'RS256',
-      expiresIn: JWT_EXPIRE || 86400,
+      // expiresIn: JWT_EXPIRE || 86400,
       keyid: JWT_KEY_ID,
     })
   }
@@ -126,7 +129,6 @@ export class AuthService {
     return {
       user,
       jwtToken,
-      exp: jwtDecodedToken ? jwtDecodedToken.payload.exp : null,
     }
   }
 

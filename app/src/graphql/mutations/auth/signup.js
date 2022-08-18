@@ -4,7 +4,6 @@ export const SIGIN = gql`
   mutation LOGIN($password: String!, $email: String!) {
     login(data: { password: $password, email: $email }) {
       id
-      exp
       token
       name
       agency_name

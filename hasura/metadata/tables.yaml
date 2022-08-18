@@ -1,14 +1,53 @@
 - table:
     schema: public
     name: address
-  array_relationships:
-    - name: tours
+  object_relationships:
+    - name: city
       using:
-        foreign_key_constraint_on:
-          column: destiny
-          table:
+        manual_configuration:
+          remote_table:
             schema: public
-            name: tour
+            name: city
+          insertion_order: null
+          column_mapping:
+            city_id: id
+    - name: country
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: country
+          insertion_order: null
+          column_mapping:
+            country_id: id
+    - name: state
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: state
+          insertion_order: null
+          column_mapping:
+            state_id: id
+  insert_permissions:
+    - role: manager
+      permission:
+        check: {}
+        columns:
+          - lat
+          - long
+          - neighborhood
+          - reference
+          - street
+          - street_number
+          - zip_code
+          - city_id
+          - country_id
+          - state_id
+          - created_at
+          - updated_at
+          - id
+        backend_only: false
 - table:
     schema: public
     name: agency
@@ -41,12 +80,34 @@
     schema: public
     name: boarding
   object_relationships:
+    - name: address
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: address
+          insertion_order: null
+          column_mapping:
+            address_id: id
     - name: boarding_type
       using:
         foreign_key_constraint_on: type
     - name: tour
       using:
         foreign_key_constraint_on: tour_id
+  insert_permissions:
+    - role: manager
+      permission:
+        check: {}
+        columns:
+          - id
+          - created_at
+          - updated_at
+          - type
+          - tour_id
+          - date
+          - address_id
+        backend_only: false
 - table:
     schema: public
     name: boarding_type
@@ -267,10 +328,19 @@
   object_relationships:
     - name: address
       using:
-        foreign_key_constraint_on: destiny
+        foreign_key_constraint_on: destiny_id
     - name: agency
       using:
         foreign_key_constraint_on: agency_id
+    - name: destiny
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: address
+          insertion_order: null
+          column_mapping:
+            destiny_id: id
   array_relationships:
     - name: boardings
       using:
@@ -286,6 +356,36 @@
           table:
             schema: public
             name: package
+  insert_permissions:
+    - role: manager
+      permission:
+        check:
+          agency_id:
+            _eq: X-Hasura-Agency-Id
+        set:
+          agency_id: x-hasura-Agency-Id
+        columns:
+          - created_at
+          - description
+          - destiny_id
+          - id
+          - name
+          - status
+          - updated_at
+        backend_only: false
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - agency_id
+          - description
+          - destiny_id
+          - id
+          - name
+          - status
+        filter:
+          agency_id:
+            _eq: X-Hasura-Agency-Id
 - table:
     schema: public
     name: traveler

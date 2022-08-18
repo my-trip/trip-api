@@ -1,6 +1,6 @@
 <template>
 
-  <CForm class="col g-3 mt-4">
+  <CForm @submit="handleSubmit" class="col g-3 mt-4">
     <div class="row">
       <h5>Destino</h5>
       <AdressForm :isBoarding="true" @change-address="changeDestinyAddress" />
@@ -11,7 +11,7 @@
       <p class="text-medium-emphasis small"> Após a criação da excursão, novos embarques podem ser cadastrados</p>
 
       <div class="col-md-3">
-        <CFormInput id="exampleFormControlInput1" type="datetime-local" />
+        <CFormInput v-model="form.date" id="exampleFormControlInput1" type="datetime-local" />
       </div>
       <!-- <div class="col-md-4">
 		  	<CFormLabel>País</CFormLabel>
@@ -55,19 +55,22 @@
         </CInputGroup>
       </div>
     </div>
-    <UploadImages @changed="handleImages"/>
-
+    <!-- <UploadImages @changed="handleImages"/> -->
+    <CCol xs="12">
+      <CButton color="primary" type="submit">Cadastrar</CButton>
+    </CCol>
   </CForm>
 </template>
 
 <script>
 import AdressForm from '../address/Address.vue'
-import UploadImages from "vue-upload-drop-images"
+import { NEW_TOUR } from '../../../graphql/mutations/tour/newTour.js'
+// import UploadImages from "vue-upload-drop-images"
 export default {
   name: 'NewTourForm',
   components: {
     AdressForm,
-    UploadImages
+    // UploadImages
   },
   data: function () {
     return {
@@ -75,7 +78,8 @@ export default {
       destiny: null,
       form: {
         name: "",
-        description: ""
+        description: "",
+        date: Date
       }
     }
   },
@@ -87,15 +91,38 @@ export default {
       this.boarding = event
     },
     handleSubmit(event) {
-      const formEvent = event.currentTarget
       event.preventDefault()
       event.stopPropagation()
 
-      this.validatedCustom01 = true
 
-      if (formEvent.checkValidity() !== false) {
+      const { name, description, date } = this.form
+      const isoDate = new Date(date).toISOString()
 
+      const boarding = this.boarding
+      const destiny = this.destiny
+
+      const variables = {
+        name,
+        description,
+        destiny_city_id: destiny.city.id,
+        destiny_country_id: destiny.country.id,
+        destiny_state_id: destiny.state.id,
+        boarding_city_id: boarding.city.id,
+        boarding_state_id: boarding.state.id,
+        boarding_street: boarding.street,
+        boarding_reference: boarding.reference,
+        boarding_neighborhood: boarding.neighborhood,
+        boarding_zip_code: boarding.zipCode,
+        boarding_date: isoDate,
       }
+      this.$apollo.mutate({
+        mutation: NEW_TOUR,
+        variables
+      }).then(value => {
+        console.log(value)
+      }).catch(error => {
+        console.log(error)
+      })
     },
     handleImages(files) {
       console.log(files[0])

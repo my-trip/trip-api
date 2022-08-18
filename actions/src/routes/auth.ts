@@ -74,7 +74,7 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body.input.data as AuthParams
 
   try {
-    const { user, jwtToken, exp } = await AuthService.login(
+    const { user, jwtToken } = await AuthService.login(
       email,
       password
     )
@@ -85,8 +85,6 @@ router.post('/login', async (req, res) => {
       agency_name: user.agency_manager?.agency?.name,
       email: user.email,
       roles: user.role,
-      exp,
-      valid_until: exp.toString(), // Legacy support
       token: jwtToken,
     })
   } catch (e) {
