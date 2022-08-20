@@ -23,6 +23,11 @@ export default [
 				component: () => import('@/views/pages/authenticated/tour/NewTour.vue'),
 			},
 			{
+				path: '/tour/list',
+				name: 'TourList',
+				component: () => import('@/views/pages/authenticated/tour/TourList.vue'),
+			},
+			{
 				path: '/theme',
 				name: 'Theme',
 				redirect: '/theme/typography',

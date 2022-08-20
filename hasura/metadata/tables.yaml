@@ -48,6 +48,24 @@
           - updated_at
           - id
         backend_only: false
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - lat
+          - long
+          - neighborhood
+          - reference
+          - street
+          - street_number
+          - zip_code
+          - city_id
+          - country_id
+          - state_id
+          - created_at
+          - updated_at
+          - id
+        filter: {}
 - table:
     schema: public
     name: agency
@@ -356,6 +374,12 @@
           table:
             schema: public
             name: package
+  computed_fields:
+    - name: boarding_date
+      definition:
+        function:
+          schema: public
+          name: tour_boarding_date
   insert_permissions:
     - role: manager
       permission:
@@ -383,6 +407,8 @@
           - id
           - name
           - status
+        computed_fields:
+          - boarding_date
         filter:
           agency_id:
             _eq: X-Hasura-Agency-Id
