@@ -102,8 +102,6 @@ export default {
       },
     },
     'address.country'(newValue) {
-      console.log("AHHHHH")
-      console.log(newValue)
       const value = newValue && newValue.id && newValue.id == 1 ? 1 : 0
       this.address.state = {}
 

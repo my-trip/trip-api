@@ -2,8 +2,8 @@
 import { gql } from '@apollo/client/core'
 
 export const GET_TOUR = gql`
-  query tour {
-    tour{
+  query tour($where:  tour_bool_exp) {
+    tour( where: $where, order_by: { boarding_date: desc } ){
       id
       name
       status
@@ -12,6 +12,7 @@ export const GET_TOUR = gql`
         country {
           id
           name
+          name_pt
         }
         state {
           id
