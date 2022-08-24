@@ -203,6 +203,21 @@
           table:
             schema: public
             name: package_item
+  insert_permissions:
+    - role: manager
+      permission:
+        check:
+          tour:
+            agency_id:
+              _eq: X-Hasura-Agency-Id
+        columns:
+          - description
+          - name
+          - created_at
+          - updated_at
+          - id
+          - tour_id
+        backend_only: false
   select_permissions:
     - role: manager
       permission:
