@@ -190,6 +190,33 @@
             name: person
 - table:
     schema: public
+    name: item
+  object_relationships:
+    - name: tour
+      using:
+        foreign_key_constraint_on: tour_id
+  array_relationships:
+    - name: package_items
+      using:
+        foreign_key_constraint_on:
+          column: item_id
+          table:
+            schema: public
+            name: package_item
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - description
+          - id
+          - name
+          - tour_id
+        filter:
+          tour:
+            agency_id:
+              _eq: X-Hasura-Agency-Id
+- table:
+    schema: public
     name: package
   object_relationships:
     - name: tour
@@ -246,6 +273,9 @@
     schema: public
     name: package_item
   object_relationships:
+    - name: item
+      using:
+        foreign_key_constraint_on: item_id
     - name: package
       using:
         foreign_key_constraint_on: package_id
