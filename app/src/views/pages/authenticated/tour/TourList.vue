@@ -2,54 +2,56 @@
   <CRow>
     <CCol :md="12">
       <CCard class="mb-4 p-4">
-        <CRow>
-          <h2>Excursões</h2>
-        </CRow>
-        <CRow>
-          <h6>Filtros</h6>
-          <AdressForm :isBoarding="true" @change-address="changeAddressFilter" />
-        </CRow>
-        <CRow class="mt-4 mb-4">
-          <CCol>
-            <CFormLabel>Embarque a partir de</CFormLabel>
-            <CFormInput v-model="filter.dateInit" id="exampleFormControlInput1" type="datetime-local" />
-          </CCol>
-          <CCol>
-            <CFormLabel>Embarque até</CFormLabel>
-            <CFormInput v-model="filter.dateEnd" id="exampleFormControlInput1" type="datetime-local" />
-          </CCol>
-        </CRow>
-        <CRow>
-          <CCol class="align-self-end" xs="12">
-            <CButton color="primary" @click="search">Buscar</CButton>
-          </CCol>
-        </CRow>
         <CCardBody>
-          <CTable>
-            <CTableHead>
+          <CRow>
+            <h2>Excursões</h2>
+          </CRow>
+          <CRow>
+            <h6>Filtros</h6>
+          </CRow>
+          <AdressForm :isBoarding="true" @change-address="changeAddressFilter" />
+
+          <CRow class="mt-4 mb-4">
+            <CCol>
+              <CFormLabel>Embarque a partir de</CFormLabel>
+              <CFormInput v-model="filter.dateInit" id="exampleFormControlInput1" type="datetime-local" />
+            </CCol>
+            <CCol>
+              <CFormLabel>Embarque até</CFormLabel>
+              <CFormInput v-model="filter.dateEnd" id="exampleFormControlInput1" type="datetime-local" />
+            </CCol>
+          </CRow>
+          <CRow class="justify-content-end">
+            <CCol>
+              <CButton color="primary" @click="search">Buscar</CButton>
+            </CCol>
+          </CRow>
+          <CTable class="mt-5 mb-0 border" hover responsive>
+            <CTableHead color="light">
               <CTableRow>
-                <CTableHeaderCell scope="col">Nome</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-                <CTableHeaderCell scope="col">País</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Estado</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Cidade</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Embarque</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Ações</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">Status</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">País</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">Estado</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">Cidade</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">Embarque</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">Ações</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody v-for="tourData in tour" :key="tourData.id">
               <CTableRow :color="getStatusColor(tourData.status)">
-                <CTableHeaderCell scope="row">{{ tourData.name }}</CTableHeaderCell>
-                <CTableDataCell>{{ getStatusName(tourData.status) }}</CTableDataCell>
-                <CTableDataCell>{{ tourData.destiny.country.name_pt }}</CTableDataCell>
-                <CTableDataCell>{{ tourData.destiny.state.name }}</CTableDataCell>
-                <CTableDataCell>{{ tourData.destiny.city.name }}</CTableDataCell>
-                <CTableDataCell>{{ tourData.boarding_date ? new Date(tourData.boarding_date).toLocaleString() :
+                <CTableHeaderCell class="text-center" scope="row">{{ tourData.name }}</CTableHeaderCell>
+                <CTableDataCell class="text-center">{{ getStatusName(tourData.status) }}</CTableDataCell>
+                <CTableDataCell class="text-center">{{ tourData.destiny.country.name_pt }}</CTableDataCell>
+                <CTableDataCell class="text-center">{{ tourData.destiny.state.name }}</CTableDataCell>
+                <CTableDataCell class="text-center">{{ tourData.destiny.city.name }}</CTableDataCell>
+                <CTableDataCell class="text-center">{{ tourData.boarding_date ? new
+                    Date(tourData.boarding_date).toLocaleString() :
                     "Nenhum"
                 }}</CTableDataCell>
-                <CTableDataCell> Visualizar
+                <CTableDataCell class="text-center">
+                  <CButton @click="() => goToTour(tourData.id)" color="primary" variant="ghost">Visualizar</CButton>
                 </CTableDataCell>
-
               </CTableRow>
             </CTableBody>
           </CTable>
@@ -87,6 +89,9 @@ export default {
     }
   },
   methods: {
+    goToTour(id) {
+      this.$router.push({ name: 'Tour', params: { id: id } })
+    },
     search() {
       const where = {}
 
@@ -156,29 +161,5 @@ export default {
       return statusMap[name]
     }
   }
-  //   mixins: [Auth],
-  // components: {
-  // 	NewTourForm,
-  // },
-  // mounted () {
-  // 	cep("29060290").then( value => {
-  // 		console.log(value)
-  // 	})
-  // }
-  //   data: function () {
-  //     return {
-  //       registred: false
-  //     }
-  //   },
-  //   methods: {
-  //     submit: async function (submitData) {
-  //       try {
-  //         await this.signUp(submitData)  
-  //       } catch (e) {
-  //         this.liveExampleVisible = true
-  //         this.errorMessage = e.message
-  //       }
-  //     }
-  //   }
 }
 </script>

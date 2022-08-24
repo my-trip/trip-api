@@ -28,6 +28,11 @@ export default [
 				component: () => import('@/views/pages/authenticated/tour/TourList.vue'),
 			},
 			{
+				path: '/tour/:id',
+				name: 'Tour',
+				component: () => import('@/views/pages/authenticated/tour/Tour.vue'),
+			},
+			{
 				path: '/theme',
 				name: 'Theme',
 				redirect: '/theme/typography',
