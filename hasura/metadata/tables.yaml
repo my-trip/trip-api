@@ -266,6 +266,51 @@
           table:
             schema: public
             name: reservation
+  insert_permissions:
+    - role: manager
+      permission:
+        check:
+          tour:
+            agency:
+              id:
+                _eq: X-Hasura-Agency-Id
+        columns:
+          - description
+          - name
+          - quantity
+          - allowed_people
+          - price
+          - reservation_price
+          - close_selling_date
+          - created_at
+          - reservation_limit_date
+          - start_selling_date
+          - updated_at
+          - id
+          - tour_id
+        backend_only: false
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - description
+          - name
+          - quantity
+          - allowed_people
+          - price
+          - reservation_price
+          - close_selling_date
+          - created_at
+          - reservation_limit_date
+          - start_selling_date
+          - updated_at
+          - id
+          - tour_id
+        filter:
+          tour:
+            agency:
+              id:
+                _eq: X-Hasura-Agency-Id
 - table:
     schema: public
     name: package_access
@@ -294,6 +339,22 @@
     - name: package
       using:
         foreign_key_constraint_on: package_id
+  insert_permissions:
+    - role: manager
+      permission:
+        check:
+          item:
+            tour:
+              agency:
+                id:
+                  _eq: X-Hasura-Agency-Id
+        columns:
+          - created_at
+          - updated_at
+          - id
+          - item_id
+          - package_id
+        backend_only: false
 - table:
     schema: public
     name: person

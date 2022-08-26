@@ -92,13 +92,7 @@
 							scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.
 						</CTabPane>
 						<CTabPane role="tabpanel" aria-labelledby="contact-tab" :visible="tabPaneActiveKey === 3">
-							Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic
-							lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork
-							tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie
-							helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.
-							Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro
-							mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog
-							stumptown. Pitchfork sustainable tofu synth chambray yr.
+							<PackageTab />
 						</CTabPane>
 						<CTabPane role="tabpanel" aria-labelledby="contact-tab" :visible="tabPaneActiveKey === 4">
 							<ItemTab />
@@ -112,11 +106,13 @@
 <script>
 import { TOUR_BY_PK } from '../../../../graphql/queries/tour/tourByBk.js'
 import ItemTab from './tabs/item/ItemTab.vue'
+import PackageTab from './tabs/package/PackageTab.vue'
 
 export default {
 	name: 'Tour',
 	components: {
-		ItemTab
+		ItemTab,
+		PackageTab
 	},
 	data: function () {
 		return {
@@ -136,7 +132,6 @@ export default {
 	},
 	computed: {
 		boardingDate() {
-			console.log(this.tour)
 			if (this.tour.boarding_date) {
 				const date = new Date(this.tour.boarding_date)
 				return date.toLocaleString()
