@@ -1,19 +1,29 @@
 <template>
 	<CRow>
+		<CToaster placement="top-end">
+			<CToast :key="toast.title" v-for="(toast) in toasts">
+				<CToastHeader closeButton>
+					<span class="me-auto fw-bold">{{ toast.title }}</span>
+					<small>7 min ago</small>
+				</CToastHeader>
+				<CToastBody>
+					{{ toast.content }}
+				</CToastBody>
+			</CToast>
+		</CToaster>
 		<CCol :md="12">
 			<CCard class="mb-4 p-4">
 				<CCardBody>
 					<CRow>
 						<CCol :md="5">
-							<CButton :color="newItemColor" @click="changeNewItemClicked">Novo Pacote</CButton>
+							<CButton :color="newItemColor" @click="createNewPackage">Novo Pacote</CButton>
 						</CCol>
 					</CRow>
 					<CRow v-if="newItemClicked" class="mt-4">
 						<CCol>
 							<CCard class="mb-4 p-4">
 								<CCardBody>
-									<CForm class="row g-3 needs-validation" novalidate :validated="validatedCustom01"
-										@submit="createPackage">
+									<CForm class="row g-3 needs-validation" novalidate :validated="validatedCustom01" @submit="submit">
 										<CRow>
 											<CCol :md="12">
 												<CFormLabel>Nome</CFormLabel>
@@ -55,10 +65,10 @@
 												<CurrencyInput v-model="newPackage.price" :options="{ currency: 'BRL' }" />
 											</CCol>
 										</CRow>
-										<CRow class="mt-5">
+										<CRow v-if="!editMode" class="mt-5">
 											<h5>Incluir Itens</h5>
 										</CRow>
-										<CRow class="align-items-end">
+										<CRow v-if="!editMode" class="align-items-end">
 											<CCol :md="5">
 												<CFormLabel>Nome</CFormLabel>
 												<CFormInput v-model="filter.name" id="exampleFormControlInput1" type="text" />
@@ -67,18 +77,8 @@
 												<CButton color="primary" @click="search">Buscar</CButton>
 											</CCol>
 										</CRow>
-										<CToaster placement="top-end">
-											<CToast :key="toast.title" v-for="(toast) in toasts">
-												<CToastHeader closeButton>
-													<span class="me-auto fw-bold">{{ toast.title }}</span>
-													<small>7 min ago</small>
-												</CToastHeader>
-												<CToastBody>
-													{{ toast.content }}
-												</CToastBody>
-											</CToast>
-										</CToaster>
-										<CTable v-if="hasItem" class="mt-3 mb-0 border" hover responsive>
+
+										<CTable v-if="hasItem && !editMode" class="mt-3 mb-0 border" hover responsive>
 											<CTableHead color="primary">
 												<CTableRow>
 													<CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
@@ -97,9 +97,6 @@
 												</CTableRow>
 											</CTableBody>
 										</CTable>
-										<div class="pt-5" v-else>
-											<p class="text-medium-emphasis text-center">Não há itens cadastrados</p>
-										</div>
 										<CRow class="mt-5">
 											<h5>Itens Inclusos</h5>
 										</CRow>
@@ -108,14 +105,14 @@
 												<CTableRow>
 													<CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
 													<CTableHeaderCell class="text-center" scope="col">Descrição</CTableHeaderCell>
-													<CTableHeaderCell class="text-center" scope="col">Ação</CTableHeaderCell>
+													<CTableHeaderCell v-if="!editMode" class="text-center" scope="col">Ação</CTableHeaderCell>
 												</CTableRow>
 											</CTableHead>
 											<CTableBody v-for="packageItemData in newPackage.itens" :key="packageItemData.id">
 												<CTableRow>
 													<CTableDataCell class="text-center" scope="row">{{ packageItemData.name }}</CTableDataCell>
 													<CTableDataCell class="text-center">{{ packageItemData.description || "-" }}</CTableDataCell>
-													<CTableDataCell class="text-center">
+													<CTableDataCell v-if="!editMode" class="text-center">
 														<CButton @click="() => removeItem(packageItemData)" color="primary" variant="ghost">
 															Remover
 														</CButton>
@@ -128,7 +125,7 @@
 												<CButton color="light" @click="changeNewItemClicked">Cancelar</CButton>
 											</CCol>
 											<CCol :md="2">
-												<CButton color="primary" type="submit">Cadastrar</CButton>
+												<CButton color="primary" type="submit">{{ editMode ? "Atualizar" : "Cadastrar" }}</CButton>
 											</CCol>
 										</CRow>
 									</CForm>
@@ -157,6 +154,7 @@
 								<CTableHeaderCell class="text-center" scope="col">Qtd. Liberada</CTableHeaderCell>
 								<CTableHeaderCell class="text-center" scope="col">Inicio das Vendas</CTableHeaderCell>
 								<CTableHeaderCell class="text-center" scope="col">Fechamento das Vendas</CTableHeaderCell>
+								<CTableHeaderCell class="text-center" scope="col">Ações</CTableHeaderCell>
 							</CTableRow>
 						</CTableHead>
 						<CTableBody v-for="packageData in packages" :key="packageData.id">
@@ -171,6 +169,10 @@
 								<CTableDataCell class="text-center">{{ packageData.close_selling_date ?
 										new Date(packageData.close_selling_date).toLocaleString() : "-"
 								}}</CTableDataCell>
+								<CTableDataCell class="text-center">
+									<CButton @click="() => goToEdit(packageData)" color="primary" variant="ghost">Visualizar/Editar
+									</CButton>
+								</CTableDataCell>
 							</CTableRow>
 						</CTableBody>
 					</CTable>
@@ -184,7 +186,9 @@
 import { GET_ITEM } from '../../../../../../graphql/queries/item/getItem.js'
 import { GET_PACKAGE } from '../../../../../../graphql/queries/package/getPackage'
 import { NEW_PACKAGE } from '../../../../../../graphql/mutations/package/insertPackage'
+import { UPDATE_PACKAGE } from '../../../../../../graphql/mutations/package/updatePackage'
 import CurrencyInput from '../../../../../forms/CurrencyInput.vue'
+import moment from 'moment'
 
 export default {
 	name: 'PackageTab',
@@ -195,6 +199,7 @@ export default {
 			packages: [],
 			where: {},
 			newItemClicked: false,
+			editMode: false,
 			newPackage: {
 				name: null,
 				description: null,
@@ -203,6 +208,7 @@ export default {
 				allowed_people: null,
 				quantity: null,
 				price: 0.0,
+				previousItens: [],
 				itens: []
 			},
 			filter: {
@@ -250,6 +256,41 @@ export default {
 		}
 	},
 	methods: {
+		createNewPackage() {
+			this.editMode = false
+			this.newPackage = {
+				name: null,
+				description: null,
+				start_selling_date: null,
+				close_selling_date: null,
+				allowed_people: null,
+				quantity: null,
+				price: 0.0,
+				itens: []
+			}
+			this.changeNewItemClicked()
+		},
+		goToEdit(packageData) {
+			this.editMode = true
+
+			const itens = packageData.package_items.map(package_item => {
+				return package_item.item
+			})
+
+			this.newPackage = {
+				id: packageData.id,
+				name: packageData.name,
+				description: packageData.description,
+				start_selling_date: moment(packageData.start_selling_date).format("YYYY-MM-DDTHH:mm"),
+				close_selling_date: moment(packageData.end_selling_date).format("YYYY-MM-DDTHH:mm"),
+				allowed_people: packageData.allowed_people,
+				quantity: packageData.quantity,
+				price: packageData.price / 100,
+				itens: itens
+			}
+
+			this.changeNewItemClicked()
+		},
 		addItem(item) {
 			this.newPackage.itens.push(item)
 		},
@@ -266,14 +307,64 @@ export default {
 				this.newPackage.itens.splice(index, 1)
 			}
 		},
-		createToast() {
+		createToast(content) {
 			this.toasts.push({
 				title: 'Sucesso!',
-				content: 'Um novo pacote foi cadastrado.'
+				content
 			})
 		},
 		changeNewItemClicked() {
 			this.newItemClicked = !this.newItemClicked
+		},
+		submit(event) {
+			this.editMode ? this.updatePackage(event) : this.createPackage(event)
+		},
+		updatePackage(event) {
+			const formEvent = event.currentTarget
+			event.preventDefault()
+			event.stopPropagation()
+
+			this.validatedCustom01 = true
+
+			if (formEvent.checkValidity() !== false) {
+
+				const tourId = this.$route.params.id
+
+				this.$apollo.mutate({
+					mutation: UPDATE_PACKAGE,
+					variables: {
+						id: this.newPackage.id,
+						name: this.newPackage.name,
+						description: this.newPackage.description,
+						start_selling_date: this.newPackage.start_selling_date ? new Date(this.newPackage.start_selling_date).toISOString()
+							: null,
+						close_selling_date: this.newPackage.close_selling_date ? new Date(this.newPackage.close_selling_date) : null,
+						quantity: this.newPackage.quantity ? parseInt(this.newPackage.quantity) : null,
+						allowed_people: this.newPackage.allowed_people ? parseInt(this.newPackage.allowed_people) : null,
+						tour_id: tourId,
+						price: this.newPackage.price * 100,
+					}
+				}).then(value => {
+					this.createToast("Um pacote foi atualizado")
+					this.editMode = false
+					this.changeNewItemClicked()
+					this.newPackage = {
+						name: null,
+						description: null,
+						start_selling_date: null,
+						close_selling_date: null,
+						allowed_people: null,
+						quantity: null,
+						price: 0.0,
+						itens: []
+					}
+					this.$apollo.queries.packages.refetch({
+						where: this.where
+					})
+				}).catch(err => {
+					console.log(err)
+				})
+			}
 		},
 		createPackage(event) {
 			const formEvent = event.currentTarget
@@ -283,6 +374,7 @@ export default {
 			this.validatedCustom01 = true
 
 			if (formEvent.checkValidity() !== false) {
+
 				const tourId = this.$route.params.id
 
 				this.$apollo.mutate({
@@ -300,7 +392,7 @@ export default {
 						price: this.newPackage.price * 100,
 					}
 				}).then(value => {
-					this.createToast()
+					this.createToast("Um novo pacote foi cadastrado!")
 					this.changeNewItemClicked()
 					this.newPackage = {
 						name: null,
@@ -312,6 +404,9 @@ export default {
 						price: 0.0,
 						itens: []
 					}
+					this.$apollo.queries.packages.refetch({
+						where: this.where
+					})
 				}).catch(err => {
 					console.log(err)
 				})

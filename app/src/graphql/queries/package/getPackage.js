@@ -11,7 +11,16 @@ export const GET_PACKAGE = gql`
       quantity
       start_selling_date
       close_selling_date
-    }
+			price
+			package_items {
+      	id
+       	item {
+        	id
+        	name
+        	description
+      	}
+    	}
+		}
   }
 `
 

@@ -1,8 +1,5 @@
 <template>
 	<CInputGroup class="mb-3">
-		<CInputGroupText>
-			R$
-		</CInputGroupText>
 		<CFormInput ref="inputRef" type="text" />
 	</CInputGroup>
 </template>

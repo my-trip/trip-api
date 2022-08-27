@@ -269,11 +269,7 @@
   insert_permissions:
     - role: manager
       permission:
-        check:
-          tour:
-            agency:
-              id:
-                _eq: X-Hasura-Agency-Id
+        check: {}
         columns:
           - description
           - name
@@ -311,6 +307,28 @@
             agency:
               id:
                 _eq: X-Hasura-Agency-Id
+  update_permissions:
+    - role: manager
+      permission:
+        columns:
+          - description
+          - name
+          - allowed_people
+          - price
+          - quantity
+          - reservation_price
+          - close_selling_date
+          - created_at
+          - reservation_limit_date
+          - start_selling_date
+          - updated_at
+          - id
+          - tour_id
+        filter:
+          tour:
+            agency_id:
+              _eq: X-Hasura-Agency-Id
+        check: null
 - table:
     schema: public
     name: package_access
@@ -343,11 +361,10 @@
     - role: manager
       permission:
         check:
-          item:
+          package:
             tour:
-              agency:
-                id:
-                  _eq: X-Hasura-Agency-Id
+              agency_id:
+                _eq: X-Hasura-Agency-Id
         columns:
           - created_at
           - updated_at
@@ -355,6 +372,35 @@
           - item_id
           - package_id
         backend_only: false
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - created_at
+          - updated_at
+          - id
+          - item_id
+          - package_id
+        filter:
+          package:
+            tour:
+              agency_id:
+                _eq: X-Hasura-Agency-Id
+  update_permissions:
+    - role: manager
+      permission:
+        columns:
+          - created_at
+          - updated_at
+          - id
+          - item_id
+          - package_id
+        filter:
+          package:
+            tour:
+              agency_id:
+                _eq: X-Hasura-Agency-Id
+        check: null
 - table:
     schema: public
     name: person
