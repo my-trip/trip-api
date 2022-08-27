@@ -65,7 +65,6 @@
 <script>
 import { GET_TOUR } from '../../../../graphql/queries/tour/getTour.js'
 import AdressForm from '../../../forms/address/Address.vue'
-
 export default {
   name: 'TourList',
   components: { AdressForm },

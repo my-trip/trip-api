@@ -49,6 +49,12 @@
 												<CFormInput v-model="newPackage.close_selling_date" id="newItemName" type="datetime-local" />
 											</CCol>
 										</CRow>
+										<CRow class="mt-2">
+											<CCol :md="6">
+												<CFormLabel>Preço</CFormLabel>
+												<CurrencyInput v-model="newPackage.price" :options="{ currency: 'BRL' }" />
+											</CCol>
+										</CRow>
 										<CRow class="mt-5">
 											<h5>Incluir Itens</h5>
 										</CRow>
@@ -110,7 +116,8 @@
 													<CTableDataCell class="text-center" scope="row">{{ packageItemData.name }}</CTableDataCell>
 													<CTableDataCell class="text-center">{{ packageItemData.description || "-" }}</CTableDataCell>
 													<CTableDataCell class="text-center">
-														<CButton @click="() => removeItem(packageItemData)" color="primary" variant="ghost">Remover
+														<CButton @click="() => removeItem(packageItemData)" color="primary" variant="ghost">
+															Remover
 														</CButton>
 													</CTableDataCell>
 												</CTableRow>
@@ -129,22 +136,63 @@
 							</CCard>
 						</CCol>
 					</CRow>
+					<CRow class="mt-5">
+						<h6>Filtros</h6>
+					</CRow>
+					<CRow class="align-items-end">
+						<CCol :md="5">
+							<CFormLabel>Nome</CFormLabel>
+							<CFormInput v-model="filter.name" id="exampleFormControlInput1" type="text" />
+						</CCol>
+						<CCol :md="4">
+							<CButton color="primary" @click="search">Buscar</CButton>
+						</CCol>
+					</CRow>
+					<CTable v-if="hasPackage" class="mt-3 mb-0 border" hover responsive>
+						<CTableHead color="primary">
+							<CTableRow>
+								<CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
+								<CTableHeaderCell class="text-center" scope="col">Descrição</CTableHeaderCell>
+								<CTableHeaderCell class="text-center" scope="col">Pessoas por Pacote</CTableHeaderCell>
+								<CTableHeaderCell class="text-center" scope="col">Qtd. Liberada</CTableHeaderCell>
+								<CTableHeaderCell class="text-center" scope="col">Inicio das Vendas</CTableHeaderCell>
+								<CTableHeaderCell class="text-center" scope="col">Fechamento das Vendas</CTableHeaderCell>
+							</CTableRow>
+						</CTableHead>
+						<CTableBody v-for="packageData in packages" :key="packageData.id">
+							<CTableRow v-if="itemNotIncluded(packageData)">
+								<CTableDataCell class="text-center" scope="row">{{ packageData.name }}</CTableDataCell>
+								<CTableDataCell class="text-center">{{ packageData.description || "-" }}</CTableDataCell>
+								<CTableDataCell class="text-center">{{ packageData.allowed_people || "-" }}</CTableDataCell>
+								<CTableDataCell class="text-center">{{ packageData.quantity || "-" }}</CTableDataCell>
+								<CTableDataCell class="text-center">{{ packageData.start_selling_date ?
+										new Date(packageData.start_selling_date).toLocaleString() : "-"
+								}}</CTableDataCell>
+								<CTableDataCell class="text-center">{{ packageData.close_selling_date ?
+										new Date(packageData.close_selling_date).toLocaleString() : "-"
+								}}</CTableDataCell>
+							</CTableRow>
+						</CTableBody>
+					</CTable>
 				</CCardBody>
 			</CCard>
 		</CCol>
 	</CRow>
 </template>
-
-
 <script>
+
 import { GET_ITEM } from '../../../../../../graphql/queries/item/getItem.js'
+import { GET_PACKAGE } from '../../../../../../graphql/queries/package/getPackage'
 import { NEW_PACKAGE } from '../../../../../../graphql/mutations/package/insertPackage'
+import CurrencyInput from '../../../../../forms/CurrencyInput.vue'
 
 export default {
 	name: 'PackageTab',
+	components: { CurrencyInput },
 	data: function () {
 		return {
 			item: [],
+			packages: [],
 			where: {},
 			newItemClicked: false,
 			newPackage: {
@@ -154,6 +202,7 @@ export default {
 				close_selling_date: null,
 				allowed_people: null,
 				quantity: null,
+				price: 0.0,
 				itens: []
 			},
 			filter: {
@@ -164,6 +213,18 @@ export default {
 		}
 	},
 	apollo: {
+		packages: {
+			query: GET_PACKAGE,
+			variables() {
+				return {
+					where: {
+						tour_id: {
+							_eq: this.$route.params.id
+						}
+					}
+				}
+			}
+		},
 		item: {
 			query: GET_ITEM,
 			variables() {
@@ -180,6 +241,9 @@ export default {
 	computed: {
 		newItemColor() {
 			return this.newItemClicked ? "light" : "primary"
+		},
+		hasPackage() {
+			return this.packages && this.packages.length > 0
 		},
 		hasItem() {
 			return this.item && this.item.length > 0
@@ -233,7 +297,7 @@ export default {
 						allowed_people: this.newPackage.allowed_people ? parseInt(this.newPackage.allowed_people) : null,
 						items: this.newPackage.itens.map(item => ({ item_id: item.id })),
 						tour_id: tourId,
-						price: 1000,
+						price: this.newPackage.price * 100,
 					}
 				}).then(value => {
 					this.createToast()
@@ -245,10 +309,10 @@ export default {
 						close_selling_date: null,
 						allowed_people: null,
 						quantity: null,
+						price: 0.0,
 						itens: []
 					}
 				}).catch(err => {
-					console.log("DEU RUIN")
 					console.log(err)
 				})
 			}
@@ -268,7 +332,7 @@ export default {
 
 			this.where = where
 
-			this.$apollo.queries.item.refetch({
+			this.$apollo.queries.packages.refetch({
 				where: this.where
 			})
 		}
