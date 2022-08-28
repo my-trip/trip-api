@@ -12,6 +12,7 @@ export const GET_PACKAGE = gql`
       start_selling_date
       close_selling_date
 			price
+      is_available
 			package_items {
       	id
        	item {

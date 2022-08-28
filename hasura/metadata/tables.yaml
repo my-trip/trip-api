@@ -271,37 +271,39 @@
       permission:
         check: {}
         columns:
-          - description
-          - name
-          - quantity
           - allowed_people
-          - price
-          - reservation_price
           - close_selling_date
           - created_at
-          - reservation_limit_date
-          - start_selling_date
-          - updated_at
+          - description
           - id
+          - is_available
+          - name
+          - price
+          - quantity
+          - reservation_limit_date
+          - reservation_price
+          - start_selling_date
           - tour_id
+          - updated_at
         backend_only: false
   select_permissions:
     - role: manager
       permission:
         columns:
-          - description
-          - name
-          - quantity
           - allowed_people
-          - price
-          - reservation_price
           - close_selling_date
           - created_at
-          - reservation_limit_date
-          - start_selling_date
-          - updated_at
+          - description
           - id
+          - is_available
+          - name
+          - price
+          - quantity
+          - reservation_limit_date
+          - reservation_price
+          - start_selling_date
           - tour_id
+          - updated_at
         filter:
           tour:
             agency:
@@ -311,19 +313,20 @@
     - role: manager
       permission:
         columns:
-          - description
-          - name
           - allowed_people
-          - price
-          - quantity
-          - reservation_price
           - close_selling_date
           - created_at
-          - reservation_limit_date
-          - start_selling_date
-          - updated_at
+          - description
           - id
+          - is_available
+          - name
+          - price
+          - quantity
+          - reservation_limit_date
+          - reservation_price
+          - start_selling_date
           - tour_id
+          - updated_at
         filter:
           tour:
             agency_id:

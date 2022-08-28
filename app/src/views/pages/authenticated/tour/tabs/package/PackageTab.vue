@@ -65,6 +65,13 @@
 												<CurrencyInput v-model="newPackage.price" :options="{ currency: 'BRL' }" />
 											</CCol>
 										</CRow>
+										<CRow class="mt-2">
+											<CCol :md="6">
+												<CFormLabel>Disponibilidade</CFormLabel>
+												<CFormSwitch @change="changeAvailable" :checked="newPackage.is_available"
+													label="Esse pacote está disponivel para a venda" id="formSwitchCheckDefault" />
+											</CCol>
+										</CRow>
 										<CRow v-if="!editMode" class="mt-5">
 											<h5>Incluir Itens</h5>
 										</CRow>
@@ -198,6 +205,7 @@ export default {
 			item: [],
 			packages: [],
 			where: {},
+			available: true,
 			newItemClicked: false,
 			editMode: false,
 			newPackage: {
@@ -206,6 +214,7 @@ export default {
 				start_selling_date: null,
 				close_selling_date: null,
 				allowed_people: null,
+				is_available: true,
 				quantity: null,
 				price: 0.0,
 				previousItens: [],
@@ -256,6 +265,9 @@ export default {
 		}
 	},
 	methods: {
+		changeAvailable(event) {
+			this.newPackage.is_available = !this.newPackage.is_available
+		},
 		createNewPackage() {
 			this.editMode = false
 			this.newPackage = {
@@ -264,6 +276,7 @@ export default {
 				start_selling_date: null,
 				close_selling_date: null,
 				allowed_people: null,
+				is_available: true,
 				quantity: null,
 				price: 0.0,
 				itens: []
@@ -284,6 +297,7 @@ export default {
 				start_selling_date: moment(packageData.start_selling_date).format("YYYY-MM-DDTHH:mm"),
 				close_selling_date: moment(packageData.end_selling_date).format("YYYY-MM-DDTHH:mm"),
 				allowed_people: packageData.allowed_people,
+				is_available: packageData.is_available,
 				quantity: packageData.quantity,
 				price: packageData.price / 100,
 				itens: itens
@@ -342,6 +356,7 @@ export default {
 						quantity: this.newPackage.quantity ? parseInt(this.newPackage.quantity) : null,
 						allowed_people: this.newPackage.allowed_people ? parseInt(this.newPackage.allowed_people) : null,
 						tour_id: tourId,
+						is_available: this.newPackage.is_available,
 						price: this.newPackage.price * 100,
 					}
 				}).then(value => {
@@ -389,6 +404,7 @@ export default {
 						allowed_people: this.newPackage.allowed_people ? parseInt(this.newPackage.allowed_people) : null,
 						items: this.newPackage.itens.map(item => ({ item_id: item.id })),
 						tour_id: tourId,
+						is_available: this.newPackage.is_available,
 						price: this.newPackage.price * 100,
 					}
 				}).then(value => {

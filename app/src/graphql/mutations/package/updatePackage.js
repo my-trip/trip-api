@@ -10,6 +10,7 @@ export const UPDATE_PACKAGE = gql`
     $start_selling_date: timestamptz
     $close_selling_date: timestamptz
     $price: Int!
+		$is_available: Boolean
  ) {
     update_package_by_pk(
       pk_columns:{id: $id}
@@ -18,6 +19,7 @@ export const UPDATE_PACKAGE = gql`
       	description:  $description,
       	allowed_people:  $allowed_people,
       	quantity:  $quantity,
+				is_available: $is_available,
       	start_selling_date: $start_selling_date,
       	close_selling_date:  $close_selling_date,
       	price: $price,
