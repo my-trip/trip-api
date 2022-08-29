@@ -157,6 +157,7 @@
 							<CTableRow>
 								<CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
 								<CTableHeaderCell class="text-center" scope="col">Descrição</CTableHeaderCell>
+								<CTableHeaderCell class="text-center" scope="col">Status</CTableHeaderCell>
 								<CTableHeaderCell class="text-center" scope="col">Pessoas por Pacote</CTableHeaderCell>
 								<CTableHeaderCell class="text-center" scope="col">Qtd. Liberada</CTableHeaderCell>
 								<CTableHeaderCell class="text-center" scope="col">Inicio das Vendas</CTableHeaderCell>
@@ -165,9 +166,11 @@
 							</CTableRow>
 						</CTableHead>
 						<CTableBody v-for="packageData in packages" :key="packageData.id">
-							<CTableRow v-if="itemNotIncluded(packageData)">
+							<CTableRow :color="getStatusColor(packageData.is_available)" v-if="itemNotIncluded(packageData)">
 								<CTableDataCell class="text-center" scope="row">{{ packageData.name }}</CTableDataCell>
 								<CTableDataCell class="text-center">{{ packageData.description || "-" }}</CTableDataCell>
+								<CTableHeaderCell class="text-center" scope="col">{{ getStatusName(packageData.is_available) }}
+								</CTableHeaderCell>
 								<CTableDataCell class="text-center">{{ packageData.allowed_people || "-" }}</CTableDataCell>
 								<CTableDataCell class="text-center">{{ packageData.quantity || "-" }}</CTableDataCell>
 								<CTableDataCell class="text-center">{{ packageData.start_selling_date ?
@@ -265,6 +268,12 @@ export default {
 		}
 	},
 	methods: {
+		getStatusName(isAvailable) {
+			return isAvailable ? "Disponível" : "Indisponível"
+		},
+		getStatusColor(isAvailable) {
+			return isAvailable ? 'light' : 'danger'
+		},
 		changeAvailable(event) {
 			this.newPackage.is_available = !this.newPackage.is_available
 		},

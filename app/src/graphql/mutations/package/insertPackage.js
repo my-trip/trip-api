@@ -11,6 +11,7 @@ export const NEW_PACKAGE = gql`
     $close_selling_date: timestamptz
     $price: Int!
     $items:  [package_item_insert_input!]!
+    $is_available: Boolean
  ) {
     insert_package_one(object: {
       name: $name,
@@ -21,6 +22,7 @@ export const NEW_PACKAGE = gql`
       start_selling_date: $start_selling_date,
       close_selling_date:  $close_selling_date,
       price: $price,
+      is_available: $is_available,
       package_items: {
         data:  $items
         on_conflict: {
