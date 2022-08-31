@@ -126,6 +126,21 @@
           - date
           - address_id
         backend_only: false
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - type
+          - created_at
+          - date
+          - updated_at
+          - address_id
+          - id
+          - tour_id
+        filter:
+          tour:
+            agency_id:
+              _eq: X-Hasura-Agency-Id
 - table:
     schema: public
     name: boarding_type
@@ -350,6 +365,20 @@
           table:
             schema: public
             name: traveler
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - created_at
+          - updated_at
+          - id
+          - package_id
+          - purchase_id
+        filter:
+          package:
+            tour:
+              agency_id:
+                _eq: X-Hasura-Agency-Id
 - table:
     schema: public
     name: package_item
@@ -436,6 +465,28 @@
           table:
             schema: public
             name: traveler
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - document
+          - document_type
+          - name
+          - phone
+          - birth
+          - created_at
+          - updated_at
+          - id
+          - user_id
+        filter:
+          _or:
+            - user_id:
+                _eq: X-Hasura-User-Id
+            - purchases:
+                package:
+                  tour:
+                    agency_id:
+                      _eq: X-Hasura-Agency-Id
 - table:
     schema: public
     name: purchase
@@ -457,6 +508,24 @@
           table:
             schema: public
             name: package_access
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - id
+          - created_at
+          - updated_at
+          - status
+          - reservation_id
+          - price
+          - person_id
+          - package_id
+          - observation
+        filter:
+          package:
+            tour:
+              agency_id:
+                _eq: X-Hasura-Agency-Id
 - table:
     schema: public
     name: reservation
@@ -577,6 +646,21 @@
     - name: person
       using:
         foreign_key_constraint_on: person_id
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - created_at
+          - updated_at
+          - id
+          - package_access_id
+          - person_id
+        filter:
+          package_access:
+            package:
+              tour:
+                agency_id:
+                  _eq: X-Hasura-Agency-Id
 - table:
     schema: public
     name: user
@@ -599,3 +683,20 @@
           insertion_order: null
           column_mapping:
             id: user_id
+  select_permissions:
+    - role: manager
+      permission:
+        columns:
+          - email
+          - id
+          - role
+        filter:
+          _or:
+            - id:
+                _eq: X-Hasura-User-Id
+            - person:
+                purchases:
+                  package:
+                    tour:
+                      agency_id:
+                        _eq: X-Hasura-Agency-Id

@@ -169,8 +169,8 @@
 							<CTableRow :color="getStatusColor(packageData.is_available)" v-if="itemNotIncluded(packageData)">
 								<CTableDataCell class="text-center" scope="row">{{ packageData.name }}</CTableDataCell>
 								<CTableDataCell class="text-center">{{ packageData.description || "-" }}</CTableDataCell>
-								<CTableHeaderCell class="text-center" scope="col">{{ getStatusName(packageData.is_available) }}
-								</CTableHeaderCell>
+								<CTableDataCell class="text-center" scope="col">{{ getStatusName(packageData.is_available) }}
+								</CTableDataCell>
 								<CTableDataCell class="text-center">{{ packageData.allowed_people || "-" }}</CTableDataCell>
 								<CTableDataCell class="text-center">{{ packageData.quantity || "-" }}</CTableDataCell>
 								<CTableDataCell class="text-center">{{ packageData.start_selling_date ?
