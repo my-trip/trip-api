@@ -10,6 +10,7 @@ export const GET_BOARDING_BY_TOUR_ID = gql`
     }) {
       id
       date
+      name
       address {
         id
         city {

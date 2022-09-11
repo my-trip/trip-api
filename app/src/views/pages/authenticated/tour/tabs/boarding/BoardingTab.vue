@@ -17,7 +17,12 @@
                   </div>
                   <div class="row mt-4">
                     <div class="col-md-3">
+                      <CFormLabel>Data</CFormLabel>
                       <CFormInput v-model="newBoarding.date" id="exampleFormControlInput1" type="datetime-local" />
+                    </div>
+                    <div class="col-md-3">
+                      <CFormLabel>Nome</CFormLabel>
+                      <CFormInput v-model="newBoarding.name" id="exampleFormControlInput1" type="text" />
                     </div>
                     <CRow class="mt-4">
                       <CCol :md="2">
@@ -47,6 +52,7 @@
             <CTableHead color="primary">
               <CTableRow>
                 <CTableHeaderCell class="text-center" scope="col">Data</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
                 <CTableHeaderCell class="text-center" scope="col">Estado</CTableHeaderCell>
                 <CTableHeaderCell class="text-center" scope="col">Cidade</CTableHeaderCell>
                 <CTableHeaderCell class="text-center" scope="col">Bairro</CTableHeaderCell>
@@ -59,11 +65,14 @@
               <CTableRow>
                 <CTableDataCell class="text-center" scope="row">{{ getBoardingDate(boardingData.date) }}
                 </CTableDataCell>
+                <CTableDataCell class="text-center">{{ boardingData.name ? boardingData.name :
+                "-"
+                }}</CTableDataCell>
                 <CTableDataCell class="text-center">{{ boardingData.address.state ? boardingData.address.state.name :
-                    "-"
+                "-"
                 }}</CTableDataCell>
                 <CTableDataCell class="text-center" scope="row">{{ boardingData.address.city
-                    ? boardingData.address.city.name : "-"
+                ? boardingData.address.city.name : "-"
                 }}</CTableDataCell>
                 <CTableDataCell class="text-center" scope="row">{{ boardingData.address.neighborhood || "-" }}
                 </CTableDataCell>
@@ -103,6 +112,7 @@ export default {
       newItemClicked: false,
       newBoarding: {
         date: null,
+        name: null,
         address: null
       },
       filter: {
@@ -156,6 +166,7 @@ export default {
       const boardingAddress = this.newBoarding.address
 
       const variables = {
+        name: this.newBoarding.name,
         city_id: boardingAddress.city.id,
         state_id: boardingAddress.state.id,
         street: boardingAddress.street,
@@ -176,6 +187,7 @@ export default {
 
         this.newBoarding = {
           date: null,
+          name: null,
           address: null
         }
       }).catch(err => {
