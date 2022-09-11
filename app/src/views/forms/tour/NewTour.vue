@@ -94,7 +94,6 @@ export default {
       event.preventDefault()
       event.stopPropagation()
 
-
       const { name, description, date } = this.form
       const isoDate = new Date(date).toISOString()
 

@@ -154,10 +154,13 @@ export default {
       event.preventDefault()
       event.stopPropagation()
 
+      console.log("AROOOOW")
+
       this.validatedCustom01 = true
 
       if (formEvent.checkValidity() !== false) {
         const form = this.form
+        console.log("............................")
         this.$emit('registerSubmit', {
           name: form.name,
           description: form.description,
@@ -171,6 +174,7 @@ export default {
             password: form.user.password,
           }
         })
+        console.log("EMITIU")
       }
     }
   }

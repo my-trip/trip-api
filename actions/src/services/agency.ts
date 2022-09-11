@@ -15,7 +15,6 @@ interface createAgencyProps {
 }
 
 export class Agency {
-
 	static async create(agency: createAgencyProps): Promise<AgencyModel> {
 		const encryptedPassword = AuthService.encryptPassword(agency.password)
 
@@ -25,8 +24,6 @@ export class Agency {
 			mutation: INSERT_AGENCY,
 			variables: agency
 		})
-		
-		console.log(response)
 
 		return response.data.insert_agency_one as AgencyModel
 	}

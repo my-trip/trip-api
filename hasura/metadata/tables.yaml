@@ -118,25 +118,27 @@
       permission:
         check: {}
         columns:
-          - id
-          - created_at
-          - updated_at
-          - type
-          - tour_id
-          - date
           - address_id
+          - created_at
+          - date
+          - id
+          - name
+          - tour_id
+          - type
+          - updated_at
         backend_only: false
   select_permissions:
     - role: manager
       permission:
         columns:
-          - type
+          - address_id
           - created_at
           - date
-          - updated_at
-          - address_id
           - id
+          - name
           - tour_id
+          - type
+          - updated_at
         filter:
           tour:
             agency_id:
@@ -267,13 +269,6 @@
           table:
             schema: public
             name: package_item
-    - name: purchases
-      using:
-        foreign_key_constraint_on:
-          column: package_id
-          table:
-            schema: public
-            name: purchase
     - name: reservations
       using:
         foreign_key_constraint_on:
@@ -324,6 +319,7 @@
             agency:
               id:
                 _eq: X-Hasura-Agency-Id
+        allow_aggregations: true
   update_permissions:
     - role: manager
       permission:
@@ -356,7 +352,13 @@
         foreign_key_constraint_on: package_id
     - name: purchase
       using:
-        foreign_key_constraint_on: purchase_id
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: purchase
+          insertion_order: null
+          column_mapping:
+            id: package_access_id
   array_relationships:
     - name: travelers
       using:
@@ -370,15 +372,15 @@
       permission:
         columns:
           - created_at
-          - updated_at
           - id
           - package_id
-          - purchase_id
+          - updated_at
         filter:
           package:
             tour:
               agency_id:
                 _eq: X-Hasura-Agency-Id
+        allow_aggregations: true
 - table:
     schema: public
     name: package_item
@@ -483,49 +485,69 @@
             - user_id:
                 _eq: X-Hasura-User-Id
             - purchases:
-                package:
-                  tour:
-                    agency_id:
-                      _eq: X-Hasura-Agency-Id
+                package_access:
+                  package:
+                    tour:
+                      agency_id:
+                        _eq: X-Hasura-Agency-Id
+            - travelers:
+                package_access:
+                  package:
+                    tour:
+                      agency_id:
+                        _eq: X-Hasura-Agency-Id
 - table:
     schema: public
     name: purchase
   object_relationships:
-    - name: package
+    - name: package_access
       using:
-        foreign_key_constraint_on: package_id
+        foreign_key_constraint_on: package_access_id
     - name: person
       using:
         foreign_key_constraint_on: person_id
     - name: reservation
       using:
         foreign_key_constraint_on: reservation_id
-  array_relationships:
-    - name: package_accesses
-      using:
-        foreign_key_constraint_on:
-          column: purchase_id
-          table:
-            schema: public
-            name: package_access
   select_permissions:
     - role: manager
       permission:
         columns:
+          - created_at
           - id
+          - observation
+          - person_id
+          - price
+          - reservation_id
+          - status
+          - updated_at
+        filter:
+          package_access:
+            package:
+              tour:
+                agency_id:
+                  _eq: X-Hasura-Agency-Id
+  update_permissions:
+    - role: manager
+      permission:
+        columns:
+          - observation
+          - phone
+          - status
+          - price
           - created_at
           - updated_at
-          - status
-          - reservation_id
-          - price
+          - id
+          - package_access_id
           - person_id
-          - package_id
-          - observation
+          - reservation_id
         filter:
-          package:
-            tour:
-              agency_id:
-                _eq: X-Hasura-Agency-Id
+          package_access:
+            package:
+              tour:
+                agency_id:
+                  _eq: X-Hasura-Agency-Id
+        check: null
 - table:
     schema: public
     name: reservation
@@ -640,6 +662,9 @@
     schema: public
     name: traveler
   object_relationships:
+    - name: boarding
+      using:
+        foreign_key_constraint_on: boarding_id
     - name: package_access
       using:
         foreign_key_constraint_on: package_access_id
@@ -696,7 +721,8 @@
                 _eq: X-Hasura-User-Id
             - person:
                 purchases:
-                  package:
-                    tour:
-                      agency_id:
-                        _eq: X-Hasura-Agency-Id
+                  package_access:
+                    package:
+                      tour:
+                        agency_id:
+                          _eq: X-Hasura-Agency-Id

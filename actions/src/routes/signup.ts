@@ -35,6 +35,7 @@ router.post('/signup', async (req, res) => {
 
     const agencyManager = agencyManagers[0]
     const { user } = agencyManager
+    
 
     const token = await AuthService.generateJwtToken(user)
     const decodedToken = jwt.decode(token, { complete: true })

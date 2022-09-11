@@ -4,7 +4,7 @@
       <CRow class="justify-content-center">
         <CCol :md="9" :lg="7" :xl="6">
           <CCard class="mx-0">
-            <CCardBody v-if="!registred" class="p-4">
+            <CCardBody v-if="registred" class="p-4">
               <CAlert color="primary">Seu cadastro foi concluído!</CAlert>
               <CRow>
                 <CCol :xs="6">
@@ -18,7 +18,7 @@
             </CCardBody>
             <CCardBody v-else class="p-4">
               <h1>Cadastro</h1>
-              <AgencyRegisterForm  @register-submit="submit" />
+              <AgencyRegisterForm @register-submit="submit" />
             </CCardBody>
           </CCard>
         </CCol>
@@ -43,9 +43,9 @@ export default {
     }
   },
   methods: {
-    submit: async function (submitData) {
+    submit: function (submitData) {
       try {
-        await this.signUp(submitData)  
+        this.signUp(submitData) 
       } catch (e) {
         this.liveExampleVisible = true
         this.errorMessage = e.message

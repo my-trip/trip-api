@@ -21,7 +21,7 @@
 					<CRow class="justify-content-between">
 						<CCol>
 							<h6>País Destino:</h6>
-							<p class="text-medium-emphasis">
+							<p class="text-mediu	m-emphasis">
 								{{ tour.destiny.country ? tour.destiny.country.name_pt : "Não Definido" }}
 							</p>
 						</CCol>
@@ -51,39 +51,48 @@
 						<CNavItem>
 							<CNavLink href="javascript:void(0);" :active="tabPaneActiveKey === 1"
 								@click="() => { tabPaneActiveKey = 1 }">
-								Reservas
+								Viajantes
 							</CNavLink>
 						</CNavItem>
 						<CNavItem>
 							<CNavLink href="javascript:void(0);" :active="tabPaneActiveKey === 2"
 								@click="() => { tabPaneActiveKey = 2 }">
-								Embarques
+								Reservas
 							</CNavLink>
 						</CNavItem>
 						<CNavItem>
 							<CNavLink href="javascript:void(0);" :active="tabPaneActiveKey === 3"
 								@click="() => { tabPaneActiveKey = 3 }">
-								Pacotes
+								Embarques
 							</CNavLink>
 						</CNavItem>
 						<CNavItem>
 							<CNavLink href="javascript:void(0);" :active="tabPaneActiveKey === 4"
 								@click="() => { tabPaneActiveKey = 4 }">
+								Pacotes
+							</CNavLink>
+						</CNavItem>
+						<CNavItem>
+							<CNavLink href="javascript:void(0);" :active="tabPaneActiveKey === 5"
+								@click="() => { tabPaneActiveKey = 5 }">
 								Itens Inclusos
 							</CNavLink>
 						</CNavItem>
 					</CNav>
 					<CTabContent>
 						<CTabPane role="tabpanel" aria-labelledby="home-tab" :visible="tabPaneActiveKey === 1">
-							<PurchaseTab/>
+							<TravelerTab />
 						</CTabPane>
-						<CTabPane role="tabpanel" aria-labelledby="profile-tab" :visible="tabPaneActiveKey === 2">
+						<CTabPane role="tabpanel" aria-labelledby="home-tab" :visible="tabPaneActiveKey === 2">
+							<PurchaseTab />
+						</CTabPane>
+						<CTabPane role="tabpanel" aria-labelledby="profile-tab" :visible="tabPaneActiveKey === 3">
 							<BoardingTab />
 						</CTabPane>
-						<CTabPane role="tabpanel" aria-labelledby="contact-tab" :visible="tabPaneActiveKey === 3">
+						<CTabPane role="tabpanel" aria-labelledby="contact-tab" :visible="tabPaneActiveKey === 4">
 							<PackageTab />
 						</CTabPane>
-						<CTabPane role="tabpanel" aria-labelledby="contact-tab" :visible="tabPaneActiveKey === 4">
+						<CTabPane role="tabpanel" aria-labelledby="contact-tab" :visible="tabPaneActiveKey === 5">
 							<ItemTab />
 						</CTabPane>
 					</CTabContent>
@@ -98,7 +107,7 @@ import ItemTab from './tabs/item/ItemTab.vue'
 import PackageTab from './tabs/package/PackageTab.vue'
 import BoardingTab from './tabs/boarding/BoardingTab.vue'
 import PurchaseTab from './tabs/purchase/PurchaseTab.vue'
-
+import TravelerTab from './tabs/traveler/TravelerTab.vue'
 
 export default {
 	name: 'Tour',
@@ -106,7 +115,8 @@ export default {
 		ItemTab,
 		PackageTab,
 		BoardingTab,
-		PurchaseTab
+		PurchaseTab,
+		TravelerTab
 	},
 	data: function () {
 		return {

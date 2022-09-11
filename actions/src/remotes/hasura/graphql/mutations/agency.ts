@@ -6,9 +6,9 @@ export const INSERT_AGENCY = gql`
         $description: String!
         $email: String!
         $password: String!
-        $personName: String!
-        $document: String!
-        $documentType: document_type_enum!
+        # $personName: String!
+        # $document: String!
+        # $documentType: document_type_enum!
     ) {
       insert_agency_one(object: {
         name: $name,
@@ -21,13 +21,13 @@ export const INSERT_AGENCY = gql`
                 email: $email,
                 password: $password,
                 role: "manager",
-                person: {
-                  data: {
-                    name: $personName,
-                    document: $document,
-                    document_type: $documentType
-                  } 
-                }
+                # person: {
+                #   data: {
+                #     name: $personName,
+                #     document: $document,
+                #     document_type: $documentType
+                #   } 
+                # }
               }
             }
        	 	}

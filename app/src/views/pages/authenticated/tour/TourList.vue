@@ -10,7 +10,6 @@
             <h6>Filtros</h6>
           </CRow>
           <AdressForm :isBoarding="true" @change-address="changeAddressFilter" />
-
           <CRow class="mt-4 mb-4">
             <CCol>
               <CFormLabel>Embarque a partir de</CFormLabel>
@@ -27,7 +26,7 @@
             </CCol>
           </CRow>
           <CTable class="mt-5 mb-0 border" hover responsive>
-            <CTableHead color="light">
+            <CTableHead color="primary">
               <CTableRow>
                 <CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
                 <CTableHeaderCell class="text-center" scope="col">Status</CTableHeaderCell>
