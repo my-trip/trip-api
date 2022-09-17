@@ -97,8 +97,125 @@
 	</CRow>
 </template>
 <script>
+
+
+// where: {
+//       boardings: {
+//         date: {
+//             _gte: ""
+//         }
+//         address: {
+//           city_id: {_eq: 1},
+//           state_id: {_eq: 2}
+//         }
+//       }
+//       destiny: {
+//         city_id: {_eq: 1},
+//         state_id: {_eq: 2}
+//       },
+//       packages: {
+//         is_available: {
+//             _eq: true
+//         },
+//         close_selling_date: {
+//           _lte: ""
+//         },
+//         allowed_people: {
+//           _eq: 2
+//         }
+//       }
 export default {
 	name: "Test",
+	data() {
+		return {
+			tour: [],
+			filter: {
+				boarding: {},
+				destiny: {},
+				alowePeople: 0,
+				boardingDate: null,
+			}
+		}
+	},
+	apollo: {
+		tour: {
+			query: GET_TOUR,
+			variables() {
+				const now = new Date()
+				const nowString = now.toDateString()
+				return {
+					where: {
+						boardings: {
+							date: {
+								_gte: nowString
+							}
+						},
+						packages: {
+							is_available: true,
+							close_selling_date: {
+								_lte: nowString
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	methods: {
+		changeDestinyAddress: function (event) {
+			this.filter.destiny = event
+		},
+		changeBoardingAddress: function (event) {
+			this.filter.boarding = event
+		},
+		search() {
+			const where = {
+				packages: {
+					is_available: { _eq: true },
+					close_selling_date: {
+						_lte: nowString
+					}
+				}
+			}
+
+			if (this.filter.alowePeople) {
+				where.packages.allowed_people._eq = this.filter.alowePeople
+			}
+
+			if (this.filter.boardingDate) {
+				const date = new Date(this.filter.boardingDate)
+				where.boardings.date._gte = date.toDateString()
+			}
+
+			if (this.filter.destiny) {
+				const destinyAddress = {}
+
+				if (this.destiny.state.id) {
+					destinyAddress.state_id._eq = this.destiny.state.id
+				}
+
+				if (this.destiny.city.id) {
+					destinyAddress.city_id._eq = this.destiny.city.id
+				}
+
+				where.destiny = destinyAddress
+			}
+
+			if (this.filter.boarding) {
+				const boardginAddress = {}
+
+				if (this.boarding.state.id) {
+					boardginAddress.state_id._eq = this.boarding.state.id
+				}
+
+				if (this.boarding.city.id) {
+					boardginAddress.city_id._eq = this.boarding.city.id
+				}
+
+				where.boardings.address = boardginAddress
+			}
+		}
+	},
 }
 </script>
 <style>
