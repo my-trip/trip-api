@@ -113,6 +113,14 @@
     - name: tour
       using:
         foreign_key_constraint_on: tour_id
+  array_relationships:
+    - name: travelers
+      using:
+        foreign_key_constraint_on:
+          column: boarding_id
+          table:
+            schema: public
+            name: traveler
   insert_permissions:
     - role: manager
       permission:
