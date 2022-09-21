@@ -6,19 +6,21 @@ export const TOUR_BY_PK = gql`
       name
       status
       boarding_date
-      destiny {
+      packages {
+        allowed_people
+        price
+      }
+      boardings {
         id
-        country {
-          id
-          name_pt
-        }
-        state {
-          id
-          name
-        }
-        city {
-          id
-          name
+        date
+        name
+        address {
+          state {
+            name
+          }
+          city {
+            name
+          }
         }
       }
     }

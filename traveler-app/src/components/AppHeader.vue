@@ -11,21 +11,15 @@
       </CHeaderNav>
     </CContainer>
     <CHeaderDivider />
-    <CContainer fluid>
-      <AppBreadcrumb />
-    </CContainer>
   </CHeader>
 </template>
 
 <script>
-import AppBreadcrumb from './AppBreadcrumb'
 import { logo } from '@/assets/brand/logo'
 
 export default {
   name: 'AppHeader',
-  components: {
-    AppBreadcrumb,
-  },
+
   data() {
     return {
       canSearch: true,

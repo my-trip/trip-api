@@ -8,7 +8,6 @@
           <router-view />
         </CContainer>
       </div>
-      <AppFooter />
     </div>
   </div>
 </template>
@@ -24,7 +23,6 @@ export default {
   name: 'Authenticated',
   mixins: [Auth],
   components: {
-    AppFooter,
     AppHeader,
     AppSidebar,
     CContainer,
