@@ -2,7 +2,7 @@
 	<CRow>
 		<CCol :md="12">
 			<CCard class="mb-4 p-4">
-				<CModal scrollable alignment="center" fullscreen="xl" size="xl" @close="changeNewItemClicked" :keyboard="false"
+				<CModal scrollable alignment="center" fullscreen="lg" size="lg" @close="changeNewItemClicked" :keyboard="false"
 					:visible="newItemClicked">
 					<CModalHeader>
 						<CModalTitle>Viajante</CModalTitle>
@@ -23,54 +23,15 @@
 							</CCol>
 							<CCol>
 								<h6>Embarque</h6>
-								<p class="text-medium-emphasis">{{ newTraveler.boarding ? newTraveler.boarding.name : "Não Cadastrado"
+								<p class="text-medium-emphasis">{{ newTraveler.boarding ? newTraveler.boarding.name :
+								"Não Cadastrado"
 								}}</p>
 							</CCol>
 						</CRow>
-						<h5 class="mt-3">Detalhes do Pacote:</h5>
-						<CRow>
-							<CCol>
-								<h6>Nome:</h6>
-								<p class="text-medium-emphasis">{{ newTraveler.package.name }}</p>
-							</CCol>
-						</CRow>
-						<h6>Itens Inclusos:</h6>
-						<CTable class="mt-3 mb-0 border" hover responsive>
-							<CTableHead color="primary">
-								<CTableRow>
-									<CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
-									<CTableHeaderCell class="text-center" scope="col">Descrição</CTableHeaderCell>
-								</CTableRow>
-							</CTableHead>
-							<CTableBody v-for="itemData in newTraveler.package.package_items" :key="itemData.id">
-								<CTableRow>
-									<CTableDataCell class="text-center" scope="row">{{ itemData.item.name }}</CTableDataCell>
-									<CTableDataCell class="text-center">{{ itemData.item.description || "-" }}</CTableDataCell>
-								</CTableRow>
-							</CTableBody>
-						</CTable>
-						<h5 class="mt-3">Acompanhantes:</h5>
-						<CTable class="mt-3 mb-3 border" hover responsive>
-							<CTableHead color="primary">
-								<CTableRow>
-									<CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
-									<CTableHeaderCell class="text-center" scope="col">Documento</CTableHeaderCell>
-									<CTableHeaderCell class="text-center" scope="col">Telefone</CTableHeaderCell>
-								</CTableRow>
-							</CTableHead>
-							<CTableBody v-for="traveler in newTraveler.package_access.travelers" :key="traveler.id">
-								<CTableRow v-if="traveler.id !== newTraveler.id">
-									<CTableDataCell class="text-center" scope="row">{{ traveler.person.name }}
-									</CTableDataCell>
-									<CTableDataCell class="text-center" scope="row">{{ traveler.person.document }}
-									</CTableDataCell>
-									<CTableDataCell class="text-center" scope="row">{{ traveler.person.phone }}
-									</CTableDataCell>
-								</CTableRow>
-							</CTableBody>
-						</CTable>
 					</CModalBody>
 				</CModal>
+				<PurchaseModal @savePurchaseData="savePurchaseData" @closePurchaseModal="closePurchaseModal"
+					:visible="purchaseModalVisible" :purchaseId="purchaseId" />
 				<CCardBody>
 					<CRow class="mt-5">
 						<h6>Filtros</h6>
@@ -98,21 +59,20 @@
 						<CTableHead color="primary">
 							<CTableRow>
 								<CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
-								<CTableHeaderCell class="text-center" scope="col">Documento</CTableHeaderCell>
-								<CTableHeaderCell class="text-center" scope="col">Telefone</CTableHeaderCell>
-								<CTableHeaderCell class="text-center" scope="col">Ações</CTableHeaderCell>
+								<CTableHeaderCell class="text-center" scope="col">Reserva</CTableHeaderCell>
 							</CTableRow>
 						</CTableHead>
 						<CTableBody v-for="travelerData in traveler" :key="travelerData.id">
-							<CTableRow >
-								<CTableDataCell class="text-center" scope="row">{{ travelerData.person.name }}
-								</CTableDataCell>
-								<CTableDataCell class="text-center" scope="row">{{ travelerData.person.document }}
-								</CTableDataCell>
-								<CTableDataCell class="text-center" scope="row">{{ travelerData.person.phone }}
+							<CTableRow>
+								<CTableDataCell class="text-center" scope="row">
+									<CButton @click="() => goToEdit(travelerData)" color="primary" variant="ghost">
+										{{ travelerData.person.name }}
+									</CButton>
 								</CTableDataCell>
 								<CTableDataCell class="text-center" scope="row">
-									<CButton @click="() => goToEdit(travelerData)" color="primary" variant="ghost">Visualizar
+									<CButton @click="() => openPurchaseModal(travelerData.package_access.purchase.id)" color="primary"
+										variant="ghost">
+										Visualizar
 									</CButton>
 								</CTableDataCell>
 							</CTableRow>
@@ -128,6 +88,7 @@
 </template>
 <script>
 import { GET_TRAVELER } from '../../../../../../graphql/queries/traveler/getTravelers.js'
+import PurchaseModal from '../../../../../../components/purchase/PurchaseModal.vue'
 
 export default {
 	name: 'TravelerTab',
@@ -137,6 +98,7 @@ export default {
 			where: {},
 			editMode: false,
 			newItemClicked: false,
+			purchaseId: null,
 			newTraveler: {
 				name: null,
 				description: null
@@ -145,8 +107,12 @@ export default {
 				name: null
 			},
 			validatedCustom01: null,
+			purchaseModalVisible: false,
 			toasts: []
 		}
+	},
+	components: {
+		PurchaseModal
 	},
 	apollo: {
 		traveler: {
@@ -164,11 +130,34 @@ export default {
 		}
 	},
 	methods: {
+		savePurchaseData(event) {
+			this.$apollo.queries.traveler.refetch()
+			this.purchaseModalVisible = false
+		},
+		closePurchaseModal(event) {
+			this.purchaseModalVisible = false
+		},
+		openPurchaseModal(id) {
+			this.purchaseId = id
+			this.purchaseModalVisible = true
+		},
 		createToast() {
 			this.toasts.push({
 				title: 'Sucesso!',
 				content: 'Um novo item foi cadastrado.'
 			})
+		},
+		goToPurchase(travelerData) {
+			this.newPurchase = {
+				id: purchaseData.id,
+				observation: purchaseData.observation,
+				selectedStatus: {},
+				status: purchaseData.status,
+				package: purchaseData.package,
+				price: purchaseData.price,
+				person: purchaseData.person,
+				package_access: purchaseData.package_access
+			}
 		},
 		goToEdit(travelerData) {
 			this.editMode = true

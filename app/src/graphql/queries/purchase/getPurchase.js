@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client/core'
 
 export const GET_PURCHASE_BY_TOUR_ID = gql`
-	query purchase($tourId: uuid!){
-		purchase(where: { package_access: { package: { tour_id: { _eq: $tourId } }}  }) {
+	query purchase($where: purchase_bool_exp){
+		purchase(where: $where) {
 			id
 			price
 			status
@@ -22,11 +22,6 @@ export const GET_PURCHASE_BY_TOUR_ID = gql`
 					id
 					name
 					quantity
-					confirmateds: package_accesses_aggregate(where: { purchase: {status: { _eq: "confirmated"}}}) {
-          	aggregate {
-            	count
-          	}
-        	}
 				}
 				travelers {
 					id

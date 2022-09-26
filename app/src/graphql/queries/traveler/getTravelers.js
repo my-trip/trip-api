@@ -15,6 +15,9 @@ export const GET_TRAVELER = gql`
         name
       }
       package_access {
+        purchase {
+          id
+        }
         travelers   {
         	id
         	person {

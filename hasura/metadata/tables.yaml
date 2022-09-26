@@ -658,8 +658,11 @@
           - agency_id
           - description
           - destiny_id
+          - end_date
           - id
+          - is_available
           - name
+          - start_date
           - status
         computed_fields:
           - boarding_date

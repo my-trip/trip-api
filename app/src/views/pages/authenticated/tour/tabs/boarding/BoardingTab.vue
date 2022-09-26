@@ -51,37 +51,21 @@
           <CTable v-if="hasBoarding" class="mt-3 mb-0 border" hover responsive>
             <CTableHead color="primary">
               <CTableRow>
-                <CTableHeaderCell class="text-center" scope="col">Data</CTableHeaderCell>
                 <CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">Estado</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">Data</CTableHeaderCell>
                 <CTableHeaderCell class="text-center" scope="col">Cidade</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">Bairro</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">Rua</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">CEP</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">Referência</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody v-for="boardingData in boarding" :key="boardingData.id">
               <CTableRow>
-                <CTableDataCell class="text-center" scope="row">{{ getBoardingDate(boardingData.date) }}
-                </CTableDataCell>
                 <CTableDataCell class="text-center">{{ boardingData.name ? boardingData.name :
                 "-"
                 }}</CTableDataCell>
-                <CTableDataCell class="text-center">{{ boardingData.address.state ? boardingData.address.state.name :
-                "-"
-                }}</CTableDataCell>
+                <CTableDataCell class="text-center" scope="row">{{ getBoardingDate(boardingData.date) }}
+                </CTableDataCell>
                 <CTableDataCell class="text-center" scope="row">{{ boardingData.address.city
                 ? boardingData.address.city.name : "-"
                 }}</CTableDataCell>
-                <CTableDataCell class="text-center" scope="row">{{ boardingData.address.neighborhood || "-" }}
-                </CTableDataCell>
-                <CTableDataCell class="text-center" scope="row">{{ boardingData.address.street || "-" }}
-                </CTableDataCell>
-                <CTableDataCell class="text-center" scope="row">{{ boardingData.address.zip_code || "-" }}
-                </CTableDataCell>
-                <CTableDataCell class="text-center" scope="row">{{ boardingData.address.reference || "-" }}
-                </CTableDataCell>
               </CTableRow>
             </CTableBody>
           </CTable>

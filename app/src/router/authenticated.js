@@ -6,7 +6,7 @@ export default [
 		name: 'Dash',
 		component: import('./Authenticated'),
 		meta: { requiresAuth: true },
-		redirect: '/dashboard',
+		redirect: '/tour/list',
 		children: [
 			{
 				path: '/dashboard',
@@ -36,6 +36,11 @@ export default [
 				path: '/tour/:id',
 				name: 'Tour',
 				component: () => import('@/views/pages/authenticated/tour/Tour.vue'),
+			},
+			{
+				path: 'purchase/:id',
+				name: 'Purchase',
+				component: () => import('@/views/pages/authenticated/tour/Purchase.vue'),
 			},
 			{
 				path: '/theme',

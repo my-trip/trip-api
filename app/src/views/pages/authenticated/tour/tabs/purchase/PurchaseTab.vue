@@ -3,123 +3,8 @@
 		<CCol :md="12">
 			<CCard class="mb-4 p-4">
 				<CCardBody>
-					<CModal scrollable alignment="center" fullscreen="xl" size="xl" @close="changeNewItemClicked"
-						:keyboard="false" :visible="newItemClicked">
-						<CModalHeader>
-							<CModalTitle>Reserva</CModalTitle>
-						</CModalHeader>
-						<CModalBody>
-							<CRow class="justify-content-between">
-								<CCol>
-									<h6>Nome do Solicitante:</h6>
-									<p class="text-medium-emphasis">{{ newPurchase.person.name }}</p>
-								</CCol>
-								<CCol>
-									<h6>Email do Solicitante:</h6>
-									<p class="text-medium-emphasis">{{ newPurchase.person.user.email }}</p>
-								</CCol>
-								<CCol>
-									<h6>Telefone do Solicitante:</h6>
-									<p class="text-medium-emphasis">{{ newPurchase.person.phone }}</p>
-								</CCol>
-							</CRow>
-							<CRow class="justify-content-between">
-								<CCol>
-									<h6>Data da Solicitação de Reserva</h6>
-									<p class="text-medium-emphasis">{{ getBoardingDate(newPurchase.created_at) }}</p>
-								</CCol>
-								<CCol>
-									<h6>Situação da Reserva</h6>
-									<p class="text-medium-emphasis">{{ getStatusName(newPurchase.status) }}</p>
-								</CCol>
-							</CRow>
-							<h5 class="mt-3">Detalhes do Pacote:</h5>
-							<CRow>
-								<CCol>
-									<h6>Nome:</h6>
-									<p class="text-medium-emphasis">{{ newPurchase.package_access.package.name }}</p>
-								</CCol>
-							</CRow>
-							<CRow>
-								<CCol>
-									<h6>Quantidade Total Liberada:</h6>
-									<p class="text-medium-emphasis">{{ newPurchase.package_access.package.quantity }}</p>
-								</CCol>
-								<CCol>
-									<h6>Reservas Confirmadas</h6>
-									<p class="text-medium-emphasis">{{ newPurchase.package_access.package.confirmateds.aggregate.count }}
-									</p>
-								</CCol>
-								<CCol>
-									<h6>Reservas Aguardando Pagamento</h6>
-									<p class="text-medium-emphasis">{{ newPurchase.package_access.package.confirmateds.aggregate.count }}
-									</p>
-								</CCol>
-							</CRow>
-							<CRow>
-								<CCol>
-									<CAlert v-if="!getIsAvailableToConfirmated(newPurchase)" color="warning">O pacote ja atingiu o
-										limite de reservas!</CAlert>
-								</CCol>
-							</CRow>
-							<h5 class="mt-3">Viajantes</h5>
-							<CTable class="mt-3 mb-3 border" hover responsive>
-								<CTableHead color="primary">
-									<CTableRow>
-										<CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
-										<CTableHeaderCell class="text-center" scope="col">Documento</CTableHeaderCell>
-										<CTableHeaderCell class="text-center" scope="col">Telefone</CTableHeaderCell>
-									</CTableRow>
-								</CTableHead>
-								<CTableBody v-for="traveler in newPurchase.package_access.travelers" :key="traveler.id">
-									<CTableRow>
-										<CTableDataCell class="text-center" scope="row">{{ traveler.person.name }}
-										</CTableDataCell>
-										<CTableDataCell class="text-center" scope="row">{{ traveler.person.document }}
-										</CTableDataCell>
-										<CTableDataCell class="text-center" scope="row">{{ traveler.person.phone }}
-										</CTableDataCell>
-									</CTableRow>
-								</CTableBody>
-							</CTable>
-							<CRow>
-								<CCard class="mb-4">
-									<CCardBody>
-										<h5 class="mb-4">Alterações</h5>
-										<CForm class="row g-3 needs-validation" novalidate :validated="validatedCustom01"
-											@submit="updatePurchase">
-											<CRow>
-												<CCol :md="12">
-													<CFormLabel>Observações</CFormLabel>
-													<CFormTextarea v-model="newPurchase.observation" id="newItemDescription"
-														label="Example textarea" rows="3">
-													</CFormTextarea>
-												</CCol>
-											</CRow>
-											<CRow class="mt-4">
-												<CCol :md="12">
-													<CFormLabel>Situação</CFormLabel>
-													<CFormSelect @change="changeSelectValue" aria-label="Status"
-														:options="getOptions(newPurchase)">
-													</CFormSelect>
-													<p class="text-medium-emphasis mt-3" v-if="!getIsAvailableToConfirmated(newPurchase)">*Não é
-														possível confirmar essa reserva pois não há pacotes disponíveis*</p>
-												</CCol>
-											</CRow>
-											<CRow class="mt-4">
-												<CCol :md="2">
-													<CButton @click="changeNewItemClicked" color="secondary">Fechar</CButton>
-												</CCol>
-												<CCol :md="2">
-													<CButton @click="submit" color="primary">Salvar</CButton>
-												</CCol>
-											</CRow>
-										</CForm>
-									</CCardBody>
-								</CCard>
-							</CRow>
-						</CModalBody>
-					</CModal>
+					<PurchaseModal @savePurchaseData="savePurchaseData" @closePurchaseModal="closePurchaseModal"
+						:visible="purchaseModalVisible" :purchaseId="purchaseId" />
 					<CToaster placement="top-end">
 						<CToast :key="toast.title" v-for="(toast) in toasts">
 							<CToastHeader closeButton>
@@ -136,16 +21,46 @@
 					</CRow>
 					<CRow class="mt-2 mb-4">
 						<CCol>
-							<CFormLabel>Pacote</CFormLabel>
-							<CFormSelect :options="[]"></CFormSelect>
-						</CCol>
-						<CCol>
-							<CFormLabel>Situação</CFormLabel>
-							<CFormSelect :options="[]"></CFormSelect>
-						</CCol>
-						<CCol>
 							<CFormLabel>Solicitante</CFormLabel>
-							<CFormInput placeholder="Nome ou Email" autocomplete="nome" />
+							<CFormInput v-model="requester" placeholder="Nome ou Email" autocomplete="nome" />
+						</CCol>
+					</CRow>
+					<CRow class="mb-5">
+						<CFormLabel>Situação</CFormLabel>
+						<CCol>
+							<input @change="selectAllStatus" v-model="selectedAllStatus" class="form-check-input" type="checkbox"
+								id="inlineCheckbox1" value="all">
+							<label class="form-check-label" for="inlineCheckbox1">
+								Todas
+							</label>
+						</CCol>
+						<CCol>
+							<input @change="removeAll" v-model="checkedStatus" class="form-check-input" type="checkbox"
+								id="inlineCheckbox2" value="solicited">
+							<label class="form-check-label" for="inlineCheckbox2">
+								Novas
+							</label>
+						</CCol>
+						<CCol>
+							<input @change="removeAll" v-model="checkedStatus" class="form-check-input" type="checkbox"
+								id="inlineCheckbox3" value="waiting_payment">
+							<label class="form-check-label" for="inlineCheckbox3">
+								Aguardando Pgto.
+							</label>
+						</CCol>
+						<CCol>
+							<input @change="removeAll" v-model="checkedStatus" class="form-check-input" type="checkbox"
+								id="inlineCheckbox4" value="confirmated">
+							<label class="form-check-label" for="inlineCheckbox4">
+								Confirmadas
+							</label>
+						</CCol>
+						<CCol>
+							<input @change="removeAll" v-model="checkedStatus" class="form-check-input" type="checkbox"
+								id="inlineCheckbox5" value="cancelled">
+							<label class="form-check-label" for="inlineCheckbox5">
+								Canceladas
+							</label>
 						</CCol>
 					</CRow>
 					<CRow class="justify-content-end">
@@ -156,35 +71,19 @@
 					<CTable v-if="hasBoarding" class="mt-4 mb-0 border" hover responsive>
 						<CTableHead color="primary">
 							<CTableRow>
-								<CTableHeaderCell class="text-center" scope="col">Pacote</CTableHeaderCell>
 								<CTableHeaderCell class="text-center" scope="col">Situação</CTableHeaderCell>
-								<CTableHeaderCell class="text-center" scope="col">Preço</CTableHeaderCell>
-								<CTableHeaderCell class="text-center" scope="col">Nome do Solicitante</CTableHeaderCell>
-								<CTableHeaderCell class="text-center" scope="col">Email do Solicitante</CTableHeaderCell>
-								<CTableHeaderCell class="text-center" scope="col">Telefone do Solicitante</CTableHeaderCell>
-								<CTableHeaderCell class="text-center" scope="col">Data de Solicitação</CTableHeaderCell>
-								<CTableHeaderCell class="text-center" scope="col">Ações</CTableHeaderCell>
+								<CTableHeaderCell class="text-center" scope="col">Solicitante</CTableHeaderCell>
+								<CTableHeaderCell class="text-center" scope="col">Pacote</CTableHeaderCell>
 							</CTableRow>
 						</CTableHead>
-						<CTableBody v-for="purchaseData in purchase" :key="purchaseData.id">
-							<CTableRow :color="getStatusColor(purchaseData.status)">
-								<CTableDataCell class="text-center">{{ purchaseData.package_access.package.name }}</CTableDataCell>
-								<CTableDataCell class="text-center" scope="row">{{ getStatusName(purchaseData.status) }}
-								</CTableDataCell>
-								<CTableDataCell class="text-center" scope="row">{{ purchaseData.price }}
+						<CTableBody v-for="purchaseData in sortedPurchases" :key="purchaseData.id">
+							<CTableRow>
+								<CTableDataCell @click="() => goToEdit(purchaseData.id)" class="text-center sortable" scope="row">
+									<CBadge :color="getStatusColor(purchaseData.status)">{{ getStatusName(purchaseData.status) }}</CBadge>
 								</CTableDataCell>
 								<CTableDataCell class="text-center" scope="row">{{ purchaseData.person.name }}
 								</CTableDataCell>
-								<CTableDataCell class="text-center" scope="row">{{ purchaseData.person.user.email }}
-								</CTableDataCell>
-								<CTableDataCell class="text-center" scope="row">{{ purchaseData.person.phone }}
-								</CTableDataCell>
-								<CTableDataCell class="text-center" scope="row">{{ getBoardingDate(purchaseData.created_at) }}
-								</CTableDataCell>
-								<CTableDataCell class="text-center" scope="row">
-									<CButton @click="() => goToEdit(purchaseData)" color="primary" variant="ghost">Visualizar/Editar
-									</CButton>
-								</CTableDataCell>
+								<CTableDataCell class="text-center">{{ purchaseData.package_access.package.name }}</CTableDataCell>
 							</CTableRow>
 						</CTableBody>
 					</CTable>
@@ -198,25 +97,24 @@
 </template>
 <script>
 import { GET_PURCHASE_BY_TOUR_ID } from '../../../../../../graphql/queries/purchase/getPurchase.js'
-import { UPDATE_PURCHASE } from '../../../../../../graphql/mutations/purchase/updatePurchase'
+import PurchaseModal from '../../../../../../components/purchase/PurchaseModal.vue'
+
 export default {
 	name: 'PurchaseTab',
+	components: {
+		PurchaseModal
+	},
 	data: function () {
 		return {
 			purchase: [],
 			where: {},
 			newItemClicked: false,
-			newPurchase: {
-				id: null,
-				selectedStatus: {},
-				observation: "",
-				status: null,
-				package: null,
-				price: null,
-			},
-			filter: {
-				name: null
-			},
+			requester: null,
+			checkedStatus: ["solicited"],
+			checkBoxAllStatus: ["solicited", "waiting_payment", "confirmated", "cancelled"],
+			purchaseModalVisible: false,
+			selectedAllStatus: false,
+			purchaseId: null,
 			validatedCustom01: null,
 			toasts: []
 		}
@@ -226,12 +124,39 @@ export default {
 			query: GET_PURCHASE_BY_TOUR_ID,
 			variables() {
 				return {
-					tourId: this.$route.params.id
+					where: {
+						_and: {
+							package_access: {
+								package: {
+									tour_id: { _eq: this.$route.params.id }
+								}
+							},
+							status: { _in: ['solicited'] }
+						}
+					}
 				}
 			}
 		}
 	},
 	computed: {
+		sortedPurchases() {
+			const statusMap = {
+				"solicited": 1,
+				'waiting_payment': 2,
+				"confirmated": 3,
+				'cancelled_by_traveler': 4,
+				'automatically_cancelled': 5,
+				'cancelled_by_agency': 6,
+			}
+
+			const sortedPurchases = this.purchase.map(purchase => purchase)
+
+			sortedPurchases.sort((a, b) => {
+				return statusMap[a.status] - statusMap[b.status]
+			})
+
+			return sortedPurchases
+		},
 		newItemColor() {
 			return this.newItemClicked ? "light" : "primary"
 		},
@@ -240,73 +165,49 @@ export default {
 		}
 	},
 	methods: {
-		getIsAvailableToConfirmated(purchaseData) {
-			const confirmateds = purchaseData.package_access.package.confirmateds.aggregate.count
-			const quantity = purchaseData.package_access.package.quantity
-
-			return confirmateds < quantity
-		},
-		getOptions(purchaseData) {
-			const defaultOptions = [
-				'Escolha um novo status',
-				{ label: 'Cancelada', value: 'cancelled' },
-				{ label: 'Aguardando Pagamento', value: 'waiting_payment' },
-			]
-
-			if (this.getIsAvailableToConfirmated(purchaseData)) {
-				{
-					defaultOptions.push({ label: 'Confirmada', value: 'confirmated' })
-				}
+		selectAllStatus(event) {
+			if (!event.target.checked) {
+				this.checkedStatus = []
+				return
 			}
-
-			return defaultOptions
+			this.checkedStatus = this.checkBoxAllStatus
 		},
-		changeSelectValue(event) {
-			if (event.target.value !== 'Escolha um novo status') {
-				this.newPurchase.selectedStatus = event.target.value
+		removeAll(event) {
+			if (!event.target.checked) {
+				this.selectedAllStatus = false
 			}
 		},
-		goToEdit(purchaseData) {
-			this.editMode = true
-			console.log({ purchaseData })
-			this.newPurchase = {
-				id: purchaseData.id,
-				observation: purchaseData.observation,
-				selectedStatus: {},
-				status: purchaseData.status,
-				package: purchaseData.package,
-				price: purchaseData.price,
-				person: purchaseData.person,
-				package_access: purchaseData.package_access
-			}
-			this.changeNewItemClicked()
+		goToEdit(id) {
+			this.purchaseId = id
+			this.purchaseModalVisible = true
 		},
-		changeDestinyAddress: function (event) {
-			this.newBoarding.address = event
+		savePurchaseData(event) {
+			this.$apollo.queries.purchase.refetch()
+			this.purchaseModalVisible = false
 		},
-		getBoardingDate(date) {
-			if (date) {
-				const newDate = new Date(date)
-				return newDate.toLocaleString()
-			}
-			return "Não Definido"
+		closePurchaseModal(event) {
+			this.purchaseModalVisible = false
 		},
 		getStatusColor(name) {
 			const statusMap = {
-				"solicited": "light",
-				"cancelled": "danger",
+				"solicited": "info",
 				"confirmated": "success",
-				'waiting_payment': "warning"
+				'cancelled_by_traveler': 'danger',
+				'automatically_cancelled': 'danger',
+				'cancelled_by_agency': "danger",
+				'waiting_payment': "warning",
+				'cancelled': 'danger'
 			}
 			return statusMap[name]
 		},
 		getStatusName(name) {
 			const statusMap = {
-				'cancelled': 'Cancelada',
-				'waiting_payment': "Aguardando Pagamento",
-				'confirmated': 'Confirmada',
-				'solicited': "Solicitadata"
-
+				'cancelled_by_traveler': 'CANCELADA PELO VIAJANTE',
+				'automatically_cancelled': 'CANCELADA AUTOMATICAMENTE',
+				'cancelled_by_agency': "CANCELADA PELA AGÊNCIA",
+				'waiting_payment': "AGUARDANDO PAGAMENTO",
+				'confirmated': 'CONFIRMADA',
+				'solicited': "NOVA"
 			}
 
 			return statusMap[name]
@@ -317,39 +218,57 @@ export default {
 				content: message
 			})
 		},
-		changeNewItemClicked() {
-			this.newItemClicked = !this.newItemClicked
-		},
-		updatePurchase(event) {
-			const formEvent = event.currentTarget
-			event.preventDefault()
-			event.stopPropagation()
-
-			this.validatedCustom01 = true
-
-			if (formEvent.checkValidity() !== false) {
-				this.$apollo.mutate({
-					mutation: UPDATE_PURCHASE,
-					variables: {
-						id: this.newPurchase.id,
-						observation: this.newPurchase.observation,
-						status: this.newPurchase.selectedStatus || this.newPurchase.status
+		search() {
+			const variables = {
+				_and: {
+					package_access: {
+						package: {
+							tour_id: { _eq: this.$route.params.id }
+						}
 					}
-				}).then(value => {
-					this.createToast("A Reserva foi atualizada")
-					this.editMode = false
-					this.changeNewItemClicked()
-					this.newPurchase = {
-						id: null,
-						observation: null,
-						status: null
-					}
-					this.$apollo.queries.purchase.refetch()
-				})
-				this.validatedCustom01 = false
+				}
 			}
+			const checkedStatus = this.checkedStatus
+			if (checkedStatus.length > 0) {
+				const status = []
+				if (checkedStatus.includes('cancelled')) {
+					status.push(...['cancelled_by_traveler', 'automatically_cancelled', 'cancelled_by_agency'])
+				}
+				checkedStatus.forEach(value => {
+					if (value !== 'cancelled') {
+						status.push(value)
+					}
+				})
+				variables._and.status = { _in: status }
+
+			}
+			const requester = this.requester
+			if (this.requester) {
+				variables._and.person = {
+
+					_or: {
+						name: { _ilike: `%${requester}%` },
+						user: {
+							email: {
+								_ilike: `%${requester}%`
+							}
+						}
+					}
+				}
+			}
+			console.log({ variables })
+			this.$apollo.queries.purchase.refetch({
+				where: variables
+			})
+
 		}
 	}
 }
 </script>
+
+<style>
+.sortable {
+	cursor: pointer;
+}
+</style>
   

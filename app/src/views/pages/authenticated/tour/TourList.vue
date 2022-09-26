@@ -12,11 +12,11 @@
           <AdressForm :isBoarding="true" @change-address="changeAddressFilter" />
           <CRow class="mt-4 mb-4">
             <CCol>
-              <CFormLabel>Embarque a partir de</CFormLabel>
+              <CFormLabel>A partir de</CFormLabel>
               <CFormInput v-model="filter.dateInit" id="exampleFormControlInput1" type="datetime-local" />
             </CCol>
             <CCol>
-              <CFormLabel>Embarque até</CFormLabel>
+              <CFormLabel>Até</CFormLabel>
               <CFormInput v-model="filter.dateEnd" id="exampleFormControlInput1" type="datetime-local" />
             </CCol>
           </CRow>
@@ -29,28 +29,17 @@
             <CTableHead color="primary">
               <CTableRow>
                 <CTableHeaderCell class="text-center" scope="col">Nome</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">Status</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">País</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">Estado</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">Cidade</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">Embarque</CTableHeaderCell>
-                <CTableHeaderCell class="text-center" scope="col">Ações</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">Destino</CTableHeaderCell>
+                <CTableHeaderCell class="text-center" scope="col">Data</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody v-for="tourData in tour" :key="tourData.id">
               <CTableRow :color="getStatusColor(tourData.status)">
-                <CTableHeaderCell class="text-center" scope="row">{{ tourData.name }}</CTableHeaderCell>
-                <CTableDataCell class="text-center">{{ getStatusName(tourData.status) }}</CTableDataCell>
-                <CTableDataCell class="text-center">{{ tourData.destiny.country.name_pt }}</CTableDataCell>
-                <CTableDataCell class="text-center">{{ tourData.destiny.state.name }}</CTableDataCell>
-                <CTableDataCell class="text-center">{{ tourData.destiny.city.name }}</CTableDataCell>
-                <CTableDataCell class="text-center">{{ tourData.boarding_date ? new
-                    Date(tourData.boarding_date).toLocaleString() :
-                    "Nenhum"
-                }}</CTableDataCell>
                 <CTableDataCell class="text-center">
-                  <CButton @click="() => goToTour(tourData.id)" color="primary" variant="ghost">Visualizar</CButton>
+                  <CButton @click="() => goToTour(tourData.id)" color="primary" variant="ghost">{{ tourData.name }}</CButton>
                 </CTableDataCell>
+                <CTableDataCell class="text-center">{{ tourData.destiny.city.name }}</CTableDataCell>
+                <CTableDataCell class="text-center">{{ getDateString(tourData) }}</CTableDataCell>
               </CTableRow>
             </CTableBody>
           </CTable>
@@ -90,6 +79,12 @@ export default {
     goToTour(id) {
       this.$router.push({ name: 'Tour', params: { id: id } })
     },
+    getDateString(tour) {
+      const initDateString = new Date(tour.start_date).toLocaleDateString()
+      const endDateString = new Date(tour.end_date).toLocaleDateString()
+
+      return `${initDateString} a ${endDateString}`
+    },
     search() {
       const where = {}
 
@@ -118,21 +113,21 @@ export default {
       if (dateInit) {
         const isoDate = new Date(dateInit).toISOString()
 
-        if (!where.boarding_date) {
-          where.boarding_date = {}
+        if (!where.start_date) {
+          where.start_date = {}
         }
 
-        where.boarding_date._gte = isoDate
+        where.start_date._gte = isoDate
       }
 
       if (dateEnd) {
         const isoDate = new Date(dateEnd).toISOString()
 
-        if (!where.boarding_date) {
-          where.boarding_date = {}
+        if (!where.end_date) {
+          where.end_date = {}
         }
 
-        where.boarding_date._lte = isoDate
+        where.end_date._lte = isoDate
       }
 
       this.$apollo.queries.tour.refetch({
