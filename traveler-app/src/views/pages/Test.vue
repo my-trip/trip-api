@@ -14,10 +14,6 @@
 									<CFormLabel class="sortable">Pessoas por Pacote</CFormLabel>
 									<CFormInput v-model="filter.alowePeople" @change="filterChange" id="newItemName" type="number" />
 								</CCol>
-								<CCol md="6" v-if="visibleGeralFilters">
-									<CFormLabel>Embarque a Partir De</CFormLabel>
-									<CFormInput v-model="filter.boardingDate" id="exampleFormControlInput1" type="datetime-local" />
-								</CCol>
 							</CRow>
 							<CRow class="mt-4">
 								<h6 class="mt-2 sortable" @click="visibleBoardingFilters = !visibleBoardingFilters">Origem</h6>
@@ -26,6 +22,11 @@
 							<CRow class="mt-4 mb-4">
 								<h6 class="mt-2 sortable" @click="visibleDestinyFilters = !visibleDestinyFilters">Destino</h6>
 								<AdressForm @change-address="changeDestinyAddress" v-if="visibleDestinyFilters" :isBoarding="true" />
+							</CRow>
+							<CRow>
+								<CColum>
+									<CButton @click="search" color="primary">Filtrar</CButton>
+								</CColum>
 							</CRow>
 						</CColumn>
 					</CRow>
@@ -109,16 +110,13 @@ export default {
 				const nowString = now.toISOString()
 				return {
 					where: {
-						// boardings: {
-						// 	date: {
-						// 		_gte: nowString
-						// 	}
-						// },
 						packages: {
-							is_available: { _eq: true },
-							// close_selling_date: {
-							// 	_lte: nowString
-							// }
+							close_selling_date: {
+								_gte: nowString
+							},
+							start_selling_date: {
+								_lte: nowString
+							}
 						}
 					}
 				}
@@ -145,24 +143,19 @@ export default {
 			const nowString = now.toISOString()
 
 			const where = {
-				boardings: {
-	
-				},
+				boardings: {},
 				packages: {
-					is_available: { _eq: true },
 					close_selling_date: {
+						_gte: nowString
+					},
+					start_selling_date: {
 						_lte: nowString
 					}
 				}
 			}
 
 			if (this.filter.alowePeople) {
-				where.packages.allowed_people = { _eq: this.filter.alowePeople }
-			}
-
-			if (this.filter.boardingDate) {
-				const date = new Date(this.filter.boardingDate)
-				where.boardings.date = { _gte: date.toDateString() }
+				where.packages.allowed_people = { _gte: this.filter.alowePeople }
 			}
 
 			if (this.filter.destiny) {
@@ -170,11 +163,11 @@ export default {
 				const detiny = this.filter.destiny
 
 				if (detiny.state && detiny.state.id) {
-					destinyAddress.state_id = { _eq: this.destiny.state.id }
+					destinyAddress.state_id = { _eq: detiny.state.id }
 				}
 
 				if (detiny.city && detiny.city.id) {
-					destinyAddress.city_id = { _eq: this.destiny.city.id }
+					destinyAddress.city_id = { _eq: detiny.city.id }
 				}
 
 				where.destiny = destinyAddress
@@ -185,16 +178,20 @@ export default {
 				const boarding = this.filter.boarding
 
 				if (boarding.state && boarding.state.id) {
-					boardginAddress.state_id = { _eq: this.boarding.state.id }
+					boardginAddress.state_id = { _eq: boarding.state.id }
 				}
 
 				if (boarding.city && boarding.city.id) {
-					boardginAddress.city_id = { _eq: this.boarding.city.id }
+					boardginAddress.city_id = { _eq: boarding.city.id }
 				}
 
 				where.boardings.address = boardginAddress
 			}
+			console.log({ where })
 
+			this.$apollo.queries.tour.refetch({
+				where: where
+			})
 		}
 
 	},

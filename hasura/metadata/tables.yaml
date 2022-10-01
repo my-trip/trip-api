@@ -49,6 +49,23 @@
           - id
         backend_only: false
   select_permissions:
+    - role: anonymous
+      permission:
+        columns:
+          - lat
+          - long
+          - neighborhood
+          - reference
+          - street
+          - street_number
+          - zip_code
+          - city_id
+          - country_id
+          - state_id
+          - created_at
+          - updated_at
+          - id
+        filter: {}
     - role: manager
       permission:
         columns:
@@ -284,6 +301,12 @@
           table:
             schema: public
             name: reservation
+  computed_fields:
+    - name: available_quantity
+      definition:
+        function:
+          schema: public
+          name: package_quantity_available
   insert_permissions:
     - role: manager
       permission:
@@ -305,6 +328,27 @@
           - updated_at
         backend_only: false
   select_permissions:
+    - role: anonymous
+      permission:
+        columns:
+          - allowed_people
+          - close_selling_date
+          - created_at
+          - description
+          - id
+          - is_available
+          - name
+          - payment_limit_day
+          - price
+          - quantity
+          - reservation_limit_date
+          - reservation_price
+          - start_selling_date
+          - tour_id
+          - updated_at
+        computed_fields:
+          - available_quantity
+        filter: {}
     - role: manager
       permission:
         columns:
@@ -322,6 +366,8 @@
           - start_selling_date
           - tour_id
           - updated_at
+        computed_fields:
+          - available_quantity
         filter:
           tour:
             agency:
@@ -652,6 +698,21 @@
           - updated_at
         backend_only: false
   select_permissions:
+    - role: anonymous
+      permission:
+        columns:
+          - agency_id
+          - description
+          - destiny_id
+          - end_date
+          - id
+          - is_available
+          - name
+          - start_date
+          - updated_at
+        computed_fields:
+          - boarding_date
+        filter: {}
     - role: manager
       permission:
         columns:

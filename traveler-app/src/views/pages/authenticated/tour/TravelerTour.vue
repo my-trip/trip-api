@@ -2,22 +2,57 @@
 
 
 	<CContainer v-if="tour">
-		<CRow>
+		<CRow class="mb-2">
 			<CCol>
 				<CCard class="p-2">
 					<CCardBoard>
 						<TourCard :tour="tour" :abstract="true" />
-
 					</CCardBoard>
 				</CCard>
 			</CCol>
 		</CRow>
 		<CRow>
 			<CCol>
-				<h6>Pacotes</h6>
-				<CRow>
-
-				</CRow>
+				<CCard class="p-2">
+					<CCardBoard>
+						<h6 class="mb-3 mt-2">Pacotes</h6>
+						<CListGroup>
+							<CListGroupItem v-for="packageData in tour.packages" :key="packageData.id">
+								<h8> {{ packageData.name }} </h8>
+								<CRow>
+									<p class="text-medium-emphasis"> {{ packageData.description }}</p>
+								</CRow>
+								<CRow class="mt-2">
+									<CCol>
+										<font-awesome-icon icon="fa-solid fa-user" />
+										<span class="text-medium-emphasis">Até {{ availablePeople(packageData) }} pessoas</span>
+									</CCol>
+								</CRow>
+								<CRow class="mt-2">
+									<CCol>
+										<font-awesome-icon icon="fa-solid fa-money-bill" />
+										<span class="ml-2 text-medium-emphasis"> R${{ price(packageData) }}</span>
+									</CCol>
+								</CRow>
+								<CRow class="mt-4">
+									<CCol>
+										<font-awesome-icon icon="fa-solid fa-list" />
+										<h8> Itens Inclusos </h8>
+										<CListGroupItem class="mt-2" v-for="packageItem in packageData.package_items" :key="packageItem.id">
+											<font-awesome-icon icon="fa-solid fa-check" />
+											<span class="ml-2 text-medium-emphasis"> {{ packageItem.item.name }}</span>
+										</CListGroupItem>
+									</CCol>
+								</CRow>
+								<CRow class="mt-4 mb-2">
+									<CCol :sm="12">
+										<CButton color="primary">Reservar</CButton>
+									</CCol>
+								</CRow>
+							</CListGroupItem>
+						</CListGroup>
+					</CCardBoard>
+				</CCard>
 			</CCol>
 		</CRow>
 
@@ -27,6 +62,13 @@
 
 import { TOUR_BY_PK } from "../../../../graphql/queries/tour/tourByBk"
 import TourCard from "../../../../components/tour/TourCard.vue"
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faUser, faMoneyBill, faList, faCheck } from "@fortawesome/free-solid-svg-icons";
+
+library.add(faMoneyBill)
+library.add(faUser)
+library.add(faList)
+library.add(faCheck)
 
 export default {
 	name: "TravelerTour",
@@ -50,6 +92,13 @@ export default {
 		}
 	},
 	methods: {
+		availablePeople(packageData) {
+			return packageData.allowed_people
+		},
+		price(packageData) {
+
+			return parseFloat((packageData.price / 100).toFixed(2));
+		},
 		changeDestinyAddress: function (event) {
 			this.filter.destiny = event
 		},
