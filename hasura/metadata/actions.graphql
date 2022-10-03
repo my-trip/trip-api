@@ -31,7 +31,7 @@ type LoginOutput {
   token: String!
   id: uuid
   name: String!
-  agency_name: String!
+  agency_name: String
   email: String!
 }
 

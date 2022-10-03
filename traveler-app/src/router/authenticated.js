@@ -18,6 +18,11 @@ export default [
 				name: 'Tour',
 				component: () => import('@/views/pages/authenticated/tour/TravelerTour'),
 			},
+			{
+				path: '/package/:id/purchase',
+				name: 'Purchase',
+				component: () => import('@/views/pages/authenticated/purchase/Purchase'),
+			},
 		]
 	}
 ]
