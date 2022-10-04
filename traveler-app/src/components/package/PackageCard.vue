@@ -28,7 +28,7 @@
         </div>
       </CCol>
     </CRow>
-    <CRow class="mt-4 mb-2">
+    <CRow v-if="!hiddenButton" class="mt-4 mb-2">
       <CCol :sm="12">
         <CButton @click="goToPurchase" color="primary">Reservar</CButton>
       </CCol>
@@ -48,6 +48,10 @@ library.add(faCheck)
 export default {
   name: "TourCard",
   props: {
+    hiddenButton: {
+      type: Boolean,
+      default: false
+    },
     packageData: {
       type: Object,
     },
@@ -55,6 +59,7 @@ export default {
   data() {
     return {
       itemsVisibility: false,
+      travelers: []
     }
   },
   computed: {
