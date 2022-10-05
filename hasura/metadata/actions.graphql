@@ -1,4 +1,10 @@
 type Mutation {
+  create_user_purchase(
+    data: CreateUserPurchaseInput!
+  ): CreateUserReservationOutput
+}
+
+type Mutation {
   login(
     data: LoginInput!
   ): LoginOutput
@@ -22,6 +28,11 @@ input LoginInput {
   password: String!
 }
 
+input CreateUserPurchaseInput {
+  package_id: uuid!
+  travelers: [jsonb]
+}
+
 type SignupOutput {
   token: String!
   id: uuid!
@@ -33,5 +44,9 @@ type LoginOutput {
   name: String!
   agency_name: String
   email: String!
+}
+
+type CreateUserReservationOutput {
+  purchase_id: uuid!
 }
 

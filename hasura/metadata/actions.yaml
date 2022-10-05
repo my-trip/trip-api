@@ -1,4 +1,13 @@
 actions:
+  - name: create_user_purchase
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/purchase'
+      headers:
+        - name: Authorization
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: traveler
   - name: login
     definition:
       kind: synchronous
@@ -22,7 +31,9 @@ custom_types:
   input_objects:
     - name: SignupInput
     - name: LoginInput
+    - name: CreateUserPurchaseInput
   objects:
     - name: SignupOutput
     - name: LoginOutput
+    - name: CreateUserReservationOutput
   scalars: []

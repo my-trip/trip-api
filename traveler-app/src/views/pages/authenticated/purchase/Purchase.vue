@@ -72,7 +72,7 @@
                 </CListGroup>
               </CCol>
             </CRow>
-            <CButton @click="changeShowTravelerModal" color="primary">Novo Viajante</CButton>
+            <CButton :disabled="disabledButton" @click="changeShowTravelerModal" color="primary">Novo Viajante</CButton>
           </CCardBody>
         </CCard>
       </CCol>
@@ -111,6 +111,9 @@ export default {
     },
     allowedTravelers() {
       return `${this.travelers.length}/${this.packageData.allowed_people}`
+    },
+    disabledButton() {
+      return this.travelers.length >= this.packageData.allowed_people
     }
   },
   methods: {

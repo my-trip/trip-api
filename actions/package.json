@@ -27,6 +27,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.5",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "pem2jwk": "^1.0.2",
     "simple-encryptor": "^2.0.0",
     "subscriptions-transport-ws": "^0.11.0",
