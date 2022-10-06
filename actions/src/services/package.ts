@@ -11,6 +11,6 @@ export class Package {
       }
     })
 
-    return response.data.insert_person_one as PackageModel
+    return response.data.package as PackageModel
   }
 }

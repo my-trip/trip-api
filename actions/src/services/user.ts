@@ -1,6 +1,6 @@
 import { User as UserModel } from '../models'
 import { HasuraService } from '../remotes/hasura'
-import { INSERT_USER } from '../remotes/hasura/graphql'
+import { INSERT_USER, USER_BY_ID } from '../remotes/hasura/graphql'
 import { AuthService, Person } from './'
 
 
@@ -29,6 +29,21 @@ export class User {
 			throw e
 		}
 
+	}
+	static async getByID(userId: number): Promise<UserModel> {
+		try {
+			const response = await HasuraService.query({
+				query: USER_BY_ID,
+				variables: {
+					id: userId
+				}
+			})
+
+			return response.data.user as UserModel
+		} catch (e) {
+			console.log(e)
+			throw e
+		}
 	}
 
 	static async signup({
