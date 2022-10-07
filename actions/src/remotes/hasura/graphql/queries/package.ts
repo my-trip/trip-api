@@ -6,6 +6,7 @@ export const PACKAGE_BY_ID = gql`
         id
         allowed_people
         payment_limit_day
+        available_quantity
         is_available
         price
       }
