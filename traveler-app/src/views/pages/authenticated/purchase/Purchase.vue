@@ -20,22 +20,27 @@
       </CModalHeader>
       <CModalBody>
         <CForm class="row g-3 needs-validation" novalidate :validated="validatedCustom01" @submit="updatePurchase">
+          <CFormCheck v-if="!userInPurchase" :checked="travelerIsUser(traveler)" @change="changeUserIsTraveler"
+            id="flexCheckChecked" label="Usar dados do usuário" />
           <CRow class="mt-4">
             <CCol :md="12">
               <CFormLabel>Nome</CFormLabel>
-              <CFormInput v-model="traveler.name" id="exampleFormControlInput1" type="text" />
+              <CFormInput :disabled="traveler.isUser" v-model="traveler.name" id="exampleFormControlInput1"
+                type="text" />
             </CCol>
           </CRow>
           <CRow class="mt-4">
             <CCol :md="12">
               <CFormLabel>CPF</CFormLabel>
-              <CFormInput v-model="traveler.document" id="exampleFormControlInput1" type="text" />
+              <CFormInput :disabled="traveler.isUser" v-model="traveler.document" id="exampleFormControlInput1"
+                type="text" />
             </CCol>
           </CRow>
           <CRow class="mt-4">
             <CCol :md="12">
               <CFormLabel>Telefone</CFormLabel>
-              <CFormInput v-model="traveler.phone" id="exampleFormControlInput1" type="text" />
+              <CFormInput :disabled="traveler.isUser" v-model="traveler.phone" id="exampleFormControlInput1"
+                type="text" />
             </CCol>
           </CRow>
           <CRow>
@@ -56,33 +61,60 @@
       </CModalBody>
     </CModal>
     <CRow>
-      <CCol :md="2">
+      <CCol>
         <CCard v-if="packageData" class="p-2">
           <CCardBody>
-            <CFormCheck @change="changeUserIsTraveler" id="flexCheckChecked" label="Você é um dos viajantes" />
             <h6 class="mt-2">Viajantes ({{allowedTravelers}})</h6>
             <CRow class="mb-2">
               <p v-if="!hasTraveler">Ainda não há viajantes cadastrados</p>
-              <CCol v-else :md="2">
+              <CCol v-else>
                 <CListGroup>
-                  <CListGroupItem :active="travelerIsUser(traveler)" @click=" travelerIsUser(traveler) ? null : edit(traveler)"
-                    v-for="traveler in travelers" :key="traveler.document">
-                    {{ traveler.name}}
+                  <CListGroupItem :active="travelerIsUser(traveler)" v-for="traveler in travelers"
+                    :key="traveler.document">
+                    <CRow class="justify-content-between">
+                      <CCol :xs="8">
+                        {{traveler.name}}
+                      </CCol>
+                      <CCol :xs="4">
+                        <CRow>
+                          <CCol>
+                            <font-awesome-icon @click="edit(traveler)" icon="fa-solid fa-edit" />
+                          </CCol>
+                          <CCol @click="() => removeTraveler(traveler)">
+                            <font-awesome-icon icon="fa-solid fa-close" />
+                          </CCol>
+                        </CRow>
+
+                      </CCol>
+                    </CRow>
                   </CListGroupItem>
                 </CListGroup>
               </CCol>
             </CRow>
-            <CButton :disabled="disabledButton" @click="changeShowTravelerModal" color="primary">Novo Viajante</CButton>
+            <CButton :disabled="disabledButton" @click="addNewTraveler" color="primary">Novo Viajante</CButton>
           </CCardBody>
+        </CCard>
+      </CCol>
+    </CRow>
+    <CRow>
+      <CCol>
+        <CCard v-if="packageData" class="p-2">
+          <CButton :disabled="disabledPurchasedButton" @click="createPurchase" color="primary">Reservar</CButton>
         </CCard>
       </CCol>
     </CRow>
   </CContainer>
 </template>
 <script>
-
+import { GET_ME } from "../../../../graphql/queries/auth/me"
 import { PACKAGE_BY_PK } from "../../../../graphql/queries/package/getPackageByPk"
+import { CREATE_USER_PURCHASE } from "../../../../graphql/mutations/purchase/createPurchase"
 import PackageCard from "../../../../components/package/PackageCard.vue"
+import { faEdit, faClose } from "@fortawesome/free-solid-svg-icons";
+import { library } from '@fortawesome/fontawesome-svg-core';
+
+library.add(faEdit)
+library.add(faClose)
 
 export default {
   name: "TravelerTour",
@@ -91,8 +123,9 @@ export default {
       packageData: null,
       showTravelerModal: false,
       editMode: false,
+      me: null,
       traveler: {
-        boarding: "..."
+        boarding: null
       },
       user: {
         id: "aaa",
@@ -102,10 +135,35 @@ export default {
       travelers: []
     }
   },
+  apollo: {
+    packageData: {
+      query: PACKAGE_BY_PK,
+      variables() {
+        const id = this.$route.params.id
+        return {
+          id
+        }
+      }
+    },
+    me: {
+      query: GET_ME,
+    }
+  },
   components: {
     PackageCard
   },
   computed: {
+    userInPurchase() {
+      for (const traveler of this.travelers) {
+        if (traveler.isUser) {
+          return true
+        }
+      }
+      return false
+    },
+    disabledPurchasedButton() {
+      return !this.travelers.length
+    },
     hasTraveler() {
       return this.travelers.length
     },
@@ -117,23 +175,72 @@ export default {
     }
   },
   methods: {
+    removeTraveler(travelerData) {
+      const index = this.travelers.findIndex((traveler) => {
+        return travelerData.document === traveler.document
+      })
+      if (index > -1) { // only splice array when item is found
+        this.travelers.splice(index, 1); // 2nd parameter means remove one item only
+      }
+    },
+    createPurchase() {
+      const travelersToCreate = this.travelers.map(traveler => {
+        if (traveler.isUser) {
+          return {
+            boarding_id: traveler.boarding,
+            person_id: this.me.me.person.id
+          }
+        }
+
+        return {
+          boarding_id: traveler.boarding,
+          person: {
+            name: traveler.name,
+            phone: traveler.phone,
+            document: traveler.document
+          }
+        }
+      })
+
+      this.$apollo.mutate({
+        mutation: CREATE_USER_PURCHASE,
+        variables: {
+          package_id: this.packageData.id,
+          travelers: travelersToCreate
+        }
+      }).then(value => {
+        console.log("CRIOOOOOOOU")
+      }).catch(err => {
+        console.log("DEU RUIN")
+        console.log(err)
+      })
+    },
     isChecked(id) {
       return this.traveler.boarding && this.traveler.boarding === id
     },
     changeUserIsTraveler(event) {
       if (event.target.checked) {
-        this.travelers.push(this.user)
-      } else {
-        const index = this.travelers.findIndex((traveler) => {
-          return traveler.id === this.user.id
-        })
-        if (index > -1) { // only splice array when item is found
-          this.travelers.splice(index, 1); // 2nd parameter means remove one item only
+        const traveler = {
+          name: this.me.me.person.name,
+          document: this.me.me.person.document,
+          phone: this.me.me.person.phone,
+          boarding: this.packageData.tour.boardings[0].id,
+          isUser: true
         }
+        this.traveler = traveler
+      } else {
+        this.traveler = {}
       }
     },
+    addNewTraveler() {
+      console.log("....")
+      this.traveler = {
+        boarding: this.packageData.tour.boardings[0].id,
+      }
+      this.changeShowTravelerModal()
+    },
     travelerIsUser(traveler) {
-      return traveler.id === this.user.id
+      return traveler.isUser
     },
     edit(traveler) {
       this.editMode = true
@@ -150,7 +257,6 @@ export default {
       if (formEvent.checkValidity() !== false) {
         if (!this.editMode) {
           this.travelers.push(this.traveler)
-
         }
         this.traveler = {}
         this.changeShowTravelerModal()
@@ -169,21 +275,10 @@ export default {
       return address
     },
     changeShowTravelerModal() {
+      console.log("AHHH")
       this.showTravelerModal = !this.showTravelerModal
     }
-  },
-  apollo: {
-    packageData: {
-      query: PACKAGE_BY_PK,
-      variables() {
-        const id = this.$route.params.id
-        return {
-          id
-        }
-      }
-    }
-  },
-
+  }
 }
 </script>
 <style>

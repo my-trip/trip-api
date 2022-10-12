@@ -1,10 +1,11 @@
-import { Package as PackageModel } from '../models'
+import { Package as PackageModel, User } from '../models'
 import { HasuraService } from '../remotes/hasura'
 import { PACKAGE_BY_ID } from '../remotes/hasura/graphql'
 import { INSERT_PURCHASE } from '../remotes/hasura/graphql'
 import { Person } from '../models/person'
 interface Travelers {
-  boardingId: string,
+  boarding_id: string,
+  person_id?: string
   person: Person
 }
 interface InsertPurchasePayload {
@@ -17,17 +18,26 @@ interface InsertPurchasePayload {
 export class Purchase {
   static async create(payload: InsertPurchasePayload): Promise<PackageModel> {
     const travelers = payload.travelers.map(traveler => {
-      return {
-        boarding_id: traveler.boardingId,
-        person: {
-          data: {
-            name: traveler.person.name,
-            phone: traveler.person.phone,
-            document: traveler.person.document,
-            document_type: "CPF"
-          }
+
+      const travelerData = {
+        boarding_id: traveler.boarding_id,
+      } as any
+
+      if (traveler.person_id) {
+        travelerData.person_id = traveler.person_id
+        return travelerData
+      }
+
+      travelerData.person = {
+        data: {
+          name: traveler.person.name,
+          phone: traveler.person.phone,
+          document: traveler.person.document,
+          document_type: "CPF"
         }
       }
+
+      return travelerData
     })
 
     const variables = {

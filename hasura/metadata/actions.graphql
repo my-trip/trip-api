@@ -10,6 +10,16 @@ type Mutation {
   ): LoginOutput
 }
 
+type Query {
+  me: MeOutput
+}
+
+type Query {
+  places(
+    data: PlacesInput!
+  ): [Places]
+}
+
 type Mutation {
   signup(
     data: SignupInput!
@@ -33,6 +43,10 @@ input CreateUserPurchaseInput {
   travelers: [jsonb]
 }
 
+input PlacesInput {
+  place: String!
+}
+
 type SignupOutput {
   token: String!
   id: uuid!
@@ -48,5 +62,15 @@ type LoginOutput {
 
 type CreateUserReservationOutput {
   purchase_id: uuid!
+}
+
+type MeOutput {
+  me: jsonb!
+}
+
+type Places {
+  type: String!
+  id: Int!
+  place: String!
 }
 

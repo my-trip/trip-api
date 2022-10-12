@@ -44,6 +44,7 @@ const purchaseValidator = (travelers: any[], packageData: PackageModel): string 
 }
 
 router.post('/purchase', async (req, res) => {
+  console.log("OPA OPA")
   const headers = req.body.session_variables
   const body = req.body.input.data
   const userId = headers['x-hasura-user-id']
@@ -69,10 +70,13 @@ router.post('/purchase', async (req, res) => {
       travelers: body.travelers
     })
 
+    console.log(response)
+
     res.status(200).json({
       purchase_id: response.id
     })
   } catch (e) {
+    console.log({ e })
     return res.status(400).send()
   }
 })

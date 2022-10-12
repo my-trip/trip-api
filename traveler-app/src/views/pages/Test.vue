@@ -8,20 +8,21 @@
 				<CCardBody v-if="visibleFilters">
 					<CRow>
 						<CColumn>
-							<CRow>
-								<h6 class="mt-4 sortable" @click="visibleGeralFilters = !visibleGeralFilters">Geral</h6>
+							<CRow class="mb-2">
+								<CFormLabel class="sortable">De:</CFormLabel>
+								<autocomplete @input="changeOrigin" permitArbitraryValues v-model="origin" :items="originItems"
+									:returned="['id', 'place', 'type']" displayed="place" />
+							</CRow>
+							<CRow class="mb-2">
+								<CFormLabel class="sortable">Para:</CFormLabel>
+								<autocomplete @input="changeDestiny" permitArbitraryValues v-model="destiny" :items="destinyItems"
+									:returned="['id', 'place', 'type']" displayed="place" />
+							</CRow>
+							<CRow class="mb-3">
 								<CCol md="6" v-if="visibleGeralFilters">
 									<CFormLabel class="sortable">Pessoas por Pacote</CFormLabel>
 									<CFormInput v-model="filter.alowePeople" @change="filterChange" id="newItemName" type="number" />
 								</CCol>
-							</CRow>
-							<CRow class="mt-4">
-								<h6 class="mt-2 sortable" @click="visibleBoardingFilters = !visibleBoardingFilters">Origem</h6>
-								<AdressForm @change-address="changeBoardingAddress" v-if="visibleBoardingFilters" :isBoarding="true" />
-							</CRow>
-							<CRow class="mt-4 mb-4">
-								<h6 class="mt-2 sortable" @click="visibleDestinyFilters = !visibleDestinyFilters">Destino</h6>
-								<AdressForm @change-address="changeDestinyAddress" v-if="visibleDestinyFilters" :isBoarding="true" />
 							</CRow>
 							<CRow>
 								<CColum>
@@ -76,14 +77,15 @@
 //       }
 
 import { GET_TOUR } from "../../graphql/queries/tour/getTourTraveler"
-import AdressForm from "../forms/address/Address.vue"
 import TourCard from "../../components/tour/TourCard.vue"
+import Autocomplete from 'vue-autocomplete-input-tag'
+import { GET_PLACE } from "../../graphql/queries/place/getPlace"
 
 export default {
 	name: "Test",
 	components: {
-		AdressForm,
-		TourCard
+		TourCard,
+		Autocomplete
 	},
 	data() {
 		return {
@@ -91,13 +93,18 @@ export default {
 			visibleGeralFilters: true,
 			visibleBoardingFilters: true,
 			visibleDestinyFilters: false,
-			visibleFilters: false,
+			visibleFilters: true,
+			originTimeout: null,
+			destinyTimeout: null,
 			timer: null,
-
+			origin: null,
+			destiny: null,
+			destinyItems: [],
+			originItems: [],
 			filter: {
 				boarding: {},
 				destiny: {},
-				alowePeople: 0,
+				alowePeople: null,
 				boardingDate: null,
 			}
 		}
@@ -124,6 +131,42 @@ export default {
 		}
 	},
 	methods: {
+		changeOrigin(event) {
+			this.originItems = []
+
+			if (this.originTimeout) {
+				clearTimeout(this.originTimeout);
+			}
+			this.originTimeout = setTimeout(() => {
+
+				this.$apollo.query({
+					query: GET_PLACE,
+					variables: {
+						place: event.target.value
+					}
+				}).then(value => {
+					this.originItems = value.data.places
+				})
+			}, "1000")
+		},
+		changeDestiny(event) {
+			this.destinyItems = []
+
+			if (this.destinyTimeout) {
+				clearTimeout(this.destinyTimeout);
+			}
+			this.destinyTimeout = setTimeout(() => {
+
+				this.$apollo.query({
+					query: GET_PLACE,
+					variables: {
+						place: event.target.value
+					}
+				}).then(value => {
+					this.destinyItems = value.data.places
+				})
+			}, "1000")
+		},
 		changeDestinyAddress: function (event) {
 			this.filter.destiny = event
 		},
@@ -216,4 +259,39 @@ export default {
 .sortable {
 	cursor: pointer;
 }
+
+input {
+	width: 100%;
+	border: 1px solid #ccc;
+	color: #666;
+	border-radius: 10px;
+	outline: none;
+	padding: 9px 14px;
+	box-sizing: border-box;
+	font-size: 14px;
+}
+
+.vue-autocomplete-input-tag-items {
+	border: 1px solid #ccc;
+	max-height: 200px;
+	margin-top: 8px;
+	width: 100%;
+	background-color: white;
+	border-radius: 8px;
+	overflow: auto;
+}
+
+.vue-autocomplete-input-tag-item {
+	padding: 6px 16px;
+	color: #4a4a4a;
+	max-width: 100%;
+	cursor: pointer;
+	text-align: left;
+	font-size: 14px;
+}
+
+.vue-autocomplete-input-tag-item:hover {
+	background-color: #e8e8e8;
+}
 </style>
+

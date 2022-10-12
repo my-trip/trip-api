@@ -64,9 +64,11 @@
 <script>
 import { GET_TOUR } from '../../../../graphql/queries/tour/getTour.js'
 import AdressForm from '../../../forms/address/Address.vue'
+import Autocomplete from 'vue-autocomplete-input-tag'
+
 export default {
   name: 'TourList',
-  components: { AdressForm },
+  components: { AdressForm, Autocomplete},
   data: function () {
     return {
       tour: [],

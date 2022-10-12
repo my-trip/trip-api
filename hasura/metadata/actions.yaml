@@ -17,6 +17,27 @@ actions:
           value_from_env: ACTION_SECRET
     permissions:
       - role: anonymous
+  - name: me
+    definition:
+      kind: ""
+      handler: '{{ACTION_BASE_URL}}/me'
+      headers:
+        - name: Authorization
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: manager
+      - role: traveler
+  - name: places
+    definition:
+      kind: ""
+      handler: '{{ACTION_BASE_URL}}/place'
+      headers:
+        - name: Authorization
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: traveler
+      - role: anonymous
+      - role: manager
   - name: signup
     definition:
       kind: synchronous
@@ -32,8 +53,11 @@ custom_types:
     - name: SignupInput
     - name: LoginInput
     - name: CreateUserPurchaseInput
+    - name: PlacesInput
   objects:
     - name: SignupOutput
     - name: LoginOutput
     - name: CreateUserReservationOutput
+    - name: MeOutput
+    - name: Places
   scalars: []

@@ -1,4 +1,5 @@
 
+import { User } from "../services"
 
 import { Router, Response } from 'express'
 import { AuthService } from "../services/auth"
@@ -112,6 +113,22 @@ router.post('/validate_token', async (req, res) => {
     }
   } catch (e) {
     handleError(e, res)
+  }
+})
+
+router.post('/me', async (req, res) => {
+  console.log(">>>>>>>>>>>>>>>>")
+  const headers = req.body.session_variables
+  const userId = headers['x-hasura-user-id']
+  console.log(">>>>>>>>>>>>")
+  try {
+    const user = await User.getMe(userId)
+
+    res.status(200).json({
+      me: user
+    })
+  } catch (e) {
+    return res.status(400).send()
   }
 })
 
