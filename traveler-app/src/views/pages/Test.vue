@@ -9,18 +9,33 @@
 					<CRow>
 						<CColumn>
 							<CRow class="mb-2">
-								<CFormLabel class="sortable">De:</CFormLabel>
-								<autocomplete @input="changeOrigin" permitArbitraryValues v-model="origin" :items="originItems"
-									:returned="['id', 'place', 'type']" displayed="place" />
-							</CRow>
-							<CRow class="mb-2">
-								<CFormLabel class="sortable">Para:</CFormLabel>
-								<autocomplete @input="changeDestiny" permitArbitraryValues v-model="destiny" :items="destinyItems"
+								<h6>Origem:</h6>
+								<autocomplete @input="changeOrigin" permitArbitraryValues v-model="filter.origin" :items="originItems"
 									:returned="['id', 'place', 'type']" displayed="place" />
 							</CRow>
 							<CRow class="mb-3">
-								<CCol md="6" v-if="visibleGeralFilters">
-									<CFormLabel class="sortable">Pessoas por Pacote</CFormLabel>
+								<h6>Destino:</h6>
+								<autocomplete @input="changeDestiny" permitArbitraryValues v-model="filter.destiny"
+									:items="destinyItems" :returned="['id', 'place', 'type']" displayed="place" />
+							</CRow>
+							<CRow >
+								<h6>Data</h6>
+							</CRow>
+							<CRow class="mb-2">
+								<CCol>
+									<CFormLabel class="sortable">De:</CFormLabel>
+									<CFormInput required v-model="filter.init_date" id="newItemName" type="datetime-local" />
+								</CCol>
+							</CRow>
+							<CRow class="mb-3">
+								<CCol>
+									<CFormLabel class="sortable">Até:</CFormLabel>
+									<CFormInput required v-model="filter.end_date" id="newItemName" type="datetime-local" />
+								</CCol>
+							</CRow>
+							<CRow class="mb-3">
+								<CCol>
+									<h6>Pessoas por Pacote:</h6>
 									<CFormInput v-model="filter.alowePeople" @change="filterChange" id="newItemName" type="number" />
 								</CCol>
 							</CRow>
@@ -33,7 +48,6 @@
 					</CRow>
 				</CCardBody>
 			</CCard>
-
 		</CCrow>
 		<CCrow>
 			<CCol :xs="12">
@@ -48,33 +62,6 @@
 	</CRow>
 </template>
 <script>
-
-
-// where: {
-//       boardings: {
-//         date: {
-//             _gte: ""
-//         }
-//         address: {
-//           city_id: {_eq: 1},
-//           state_id: {_eq: 2}
-//         }
-//       }
-//       destiny: {
-//         city_id: {_eq: 1},
-//         state_id: {_eq: 2}
-//       },
-//       packages: {
-//         is_available: {
-//             _eq: true
-//         },
-//         close_selling_date: {
-//           _lte: ""
-//         },
-//         allowed_people: {
-//           _eq: 2
-//         }
-//       }
 
 import { GET_TOUR } from "../../graphql/queries/tour/getTourTraveler"
 import TourCard from "../../components/tour/TourCard.vue"
@@ -97,13 +84,11 @@ export default {
 			originTimeout: null,
 			destinyTimeout: null,
 			timer: null,
-			origin: null,
-			destiny: null,
 			destinyItems: [],
 			originItems: [],
 			filter: {
-				boarding: {},
-				destiny: {},
+				origin: null,
+				destiny: null,
 				alowePeople: null,
 				boardingDate: null,
 			}
