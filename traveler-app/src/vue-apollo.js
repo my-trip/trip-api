@@ -40,7 +40,9 @@ const apolloProvider = createApolloProvider({
 async function onLogin(data) {
   setStorageItem('token', data.token)
   setStorageItem('name', data.name)
-  setStorageItem('agencyName', data.agency_name)
+  if (data.agency_name) {
+    setStorageItem('agencyName', data.agency_name)
+  }
   setStorageItem('email', data.email)
   try {
     await apolloClient.resetStore()

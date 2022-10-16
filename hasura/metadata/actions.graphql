@@ -1,3 +1,9 @@
+type Query {
+  availabled_tours(
+    input: AvailabledToursInput
+  ): AvailabledToursOutput!
+}
+
 type Mutation {
   create_user_purchase(
     data: CreateUserPurchaseInput!
@@ -47,6 +53,14 @@ input PlacesInput {
   place: String!
 }
 
+input AvailabledToursInput {
+  allowed_people: Int
+  start_date: timestamptz
+  end_date: timestamptz
+  boarding: jsonb
+  destiny: jsonb
+}
+
 type SignupOutput {
   token: String!
   id: uuid!
@@ -72,5 +86,9 @@ type Places {
   type: String!
   id: Int!
   place: String!
+}
+
+type AvailabledToursOutput {
+  tours: [jsonb]!
 }
 

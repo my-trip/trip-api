@@ -1,4 +1,15 @@
 actions:
+  - name: availabled_tours
+    definition:
+      kind: ""
+      handler: '{{ACTION_BASE_URL}}/availabled-tour'
+      headers:
+        - name: Authorization
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: manager
+      - role: anonymous
+      - role: traveler
   - name: create_user_purchase
     definition:
       kind: synchronous
@@ -54,10 +65,12 @@ custom_types:
     - name: LoginInput
     - name: CreateUserPurchaseInput
     - name: PlacesInput
+    - name: AvailabledToursInput
   objects:
     - name: SignupOutput
     - name: LoginOutput
     - name: CreateUserReservationOutput
     - name: MeOutput
     - name: Places
+    - name: AvailabledToursOutput
   scalars: []

@@ -12,7 +12,7 @@ export class Place {
     })
 
     const { data } = response
-
+    
     const cities = data.city.map(data => {
       return {
         type: 'city',

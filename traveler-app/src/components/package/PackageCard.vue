@@ -39,6 +39,7 @@
 <script>
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faUser, faMoneyBill, faList, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { isLogged } from '../../utils/auth'
 
 library.add(faMoneyBill)
 library.add(faUser)
@@ -72,7 +73,11 @@ export default {
   },
   methods: {
     goToPurchase() {
-      this.$router.push({ name: 'Purchase', params: { id: this.packageData.id } })
+      isLogged() ? this.$router.push({ name: 'Purchase', params: { id: this.packageData.id } }) : this.$router.push({
+        name: 'Login',
+        params: { id: this.packageData.id },
+        query: { redirect: `/package/${this.packageData.id}/purchase` }
+      })
     },
     chageItemsVisibility() {
       this.itemsVisibility = !this.itemsVisibility

@@ -18,7 +18,7 @@
 								<autocomplete @input="changeDestiny" permitArbitraryValues v-model="filter.destiny"
 									:items="destinyItems" :returned="['id', 'place', 'type']" displayed="place" />
 							</CRow>
-							<CRow >
+							<CRow>
 								<h6>Data</h6>
 							</CRow>
 							<CRow class="mb-2">
@@ -51,8 +51,8 @@
 		</CCrow>
 		<CCrow>
 			<CCol :xs="12">
-				<CListGroup>
-					<CListGroupItem v-for="tourData in tour" :key="tourData.id">
+				<CListGroup v-if="availabled_tours">
+					<CListGroupItem v-for="tourData in availabled_tours.tours" :key="tourData.id">
 						<TourCard :tour="tourData" />
 					</CListGroupItem>
 				</CListGroup>
@@ -95,22 +95,11 @@ export default {
 		}
 	},
 	apollo: {
-		tour: {
+		availabled_tours: {
 			query: GET_TOUR,
 			variables() {
-				const now = new Date()
-				const nowString = now.toISOString()
 				return {
-					where: {
-						packages: {
-							close_selling_date: {
-								_gte: nowString
-							},
-							start_selling_date: {
-								_lte: nowString
-							}
-						}
-					}
+					input: {}
 				}
 			}
 		}
@@ -167,58 +156,52 @@ export default {
 			this.timer = setTimeout(search, 1500)
 		},
 		search() {
-			const now = new Date()
-			const nowString = now.toISOString()
+			const where = {}
 
-			const where = {
-				boardings: {},
-				packages: {
-					close_selling_date: {
-						_gte: nowString
-					},
-					start_selling_date: {
-						_lte: nowString
-					}
+			if (this.filter.init_date) {
+				where.start_date = new Date(this.filter.init_date).toISOString()
+			}
+
+			if (this.filter.end_date) {
+				{
+					where.end_date = new Date(this.filter.end_date).toISOString()
 				}
 			}
 
 			if (this.filter.alowePeople) {
-				where.packages.allowed_people = { _gte: this.filter.alowePeople }
+				where.allowed_people = this.filter.alowePeople
 			}
 
 			if (this.filter.destiny) {
-				const destinyAddress = {}
-				const detiny = this.filter.destiny
+				const destiny = this.filter.destiny
 
-				if (detiny.state && detiny.state.id) {
-					destinyAddress.state_id = { _eq: detiny.state.id }
+				const parameterName = destiny.type === 'state' ? 'state_id' : 'city_id'
+
+				where.destiny = {
+					[parameterName]: destiny.id
 				}
-
-				if (detiny.city && detiny.city.id) {
-					destinyAddress.city_id = { _eq: detiny.city.id }
-				}
-
-				where.destiny = destinyAddress
 			}
 
-			if (this.filter.boarding) {
-				const boardginAddress = {}
-				const boarding = this.filter.boarding
+			if (this.filter.origin) {
+				const boarding = this.filter.origin
 
-				if (boarding.state && boarding.state.id) {
-					boardginAddress.state_id = { _eq: boarding.state.id }
+				const parameterName = boarding.type === 'state' ? 'state_id' : 'city_id'
+
+				where.boarding = {
+					[parameterName]: boarding.id
 				}
-
-				if (boarding.city && boarding.city.id) {
-					boardginAddress.city_id = { _eq: boarding.city.id }
-				}
-
-				where.boardings.address = boardginAddress
 			}
-			console.log({ where })
 
-			this.$apollo.queries.tour.refetch({
-				where: where
+			this.$apollo.queries.availabled_tours.refetch({
+				start_date: where.start_date,
+				end_date: where.end_date,
+				allowed_people: where.allowed_people,
+				destiny: where.destiny,
+				boarding: where.boarding
+			}).catch(e => {
+				console.log(e)
+			}).then(v => {
+				console.log({ v })
 			})
 		}
 

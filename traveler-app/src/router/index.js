@@ -9,12 +9,18 @@ const routes = [
     path: '',
     redirect: '404',
     name: 'Unauthenticated',
-    component: {
-      render() {
-        return h(resolveComponent('router-view'))
-      },
-    },
+    component: import('./Authenticated'),
     children: [
+      {
+				path: '/tour/:id',
+				name: 'Tour',
+				component: () => import('@/views/pages/authenticated/tour/TravelerTour'),
+			},
+      {
+				path: '/tour/list',
+				name: 'TourList',
+				component: () => import('@/views/pages/Test'),
+			},
       {
         path: '404',
         name: 'Page404',

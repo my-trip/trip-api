@@ -1,8 +1,7 @@
 <template>
 	<CRow @click="() => goToTrip(tour.id)">
 		<CCol md="2">
-			<CImage rounded class="image-fit"
-				:src="image" />
+			<CImage rounded class="image-fit" :src="image" />
 		</CCol>
 		<CCol class="mt-3">
 			<CRow>
@@ -60,7 +59,6 @@ export default {
 		price() {
 			const packages = this.tour.packages
 			let min = packages[0].price
-
 			packages.forEach(packageData => {
 				if (packageData.price < min) {
 					min = packageData.price
