@@ -839,6 +839,15 @@
                 agency_id:
                   _eq: X-Hasura-Agency-Id
         check: null
+    - role: traveler
+      permission:
+        columns:
+          - status
+        filter:
+          person:
+            user_id:
+              _eq: X-Hasura-User-Id
+        check: null
 - table:
     schema: public
     name: reservation

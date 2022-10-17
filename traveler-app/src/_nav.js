@@ -7,12 +7,21 @@ const nav = isLogged() ? [
   {
     component: 'CNavItem',
     name: 'Minhas Reservas',
-    to: '/login',
+    to: '/purchase',
     icon: 'cil-speedometer',
     badge: {
       color: 'primary',
     },
   },
+  {
+    component: 'CNavItem',
+    name: 'Home',
+    to: '/tour/list',
+    icon: 'cil-speedometer',
+    badge: {
+      color: 'primary',
+    },
+  }
 ] : [
   {
     component: 'CNavItem',

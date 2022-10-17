@@ -22,6 +22,11 @@ const routes = [
 				component: () => import('@/views/pages/Test'),
 			},
       {
+				path: '/purchase',
+				name: 'Purchase',
+				component: () => import('@/views/pages/authenticated/purchase/TravelerPurchase'),
+			},
+      {
         path: '404',
         name: 'Page404',
         component: () => import('@/views/pages/Page404'),

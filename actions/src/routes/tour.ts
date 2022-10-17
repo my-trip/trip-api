@@ -17,7 +17,6 @@ router.post('/availabled-tour', async (req, res) => {
       close_selling_date: now,
     })
 
-    console.log({ tours })
     res.status(200).json({ tours })
   } catch (e) {
     return res.status(400).send()
