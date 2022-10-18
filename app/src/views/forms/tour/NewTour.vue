@@ -55,7 +55,7 @@
         </CInputGroup>
       </div>
     </div>
-    <!-- <UploadImages @changed="handleImages"/> -->
+    <UploadImages :max="1" @changed="handleImages"/>
     <CCol xs="12">
       <CButton color="primary" type="submit">Cadastrar</CButton>
     </CCol>
@@ -65,12 +65,14 @@
 <script>
 import AdressForm from '../address/Address.vue'
 import { NEW_TOUR } from '../../../graphql/mutations/tour/newTour.js'
-// import UploadImages from "vue-upload-drop-images"
+import UploadImages from "vue-upload-drop-images"
+
+
 export default {
   name: 'NewTourForm',
   components: {
     AdressForm,
-    // UploadImages
+    UploadImages
   },
   data: function () {
     return {

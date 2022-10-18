@@ -409,6 +409,9 @@
         filter: {}
 - table:
     schema: public
+    name: media
+- table:
+    schema: public
     name: package
   object_relationships:
     - name: tour

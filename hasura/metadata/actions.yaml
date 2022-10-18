@@ -19,6 +19,24 @@ actions:
           value_from_env: ACTION_SECRET
     permissions:
       - role: traveler
+  - name: finish_media
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/media/finish'
+      headers:
+        - name: Authorization
+          value_from_env: ACTION_SECRET
+  - name: init_media
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/media/init'
+      headers:
+        - name: Authorization
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: traveler
+      - role: anonymous
+      - role: manager
   - name: login
     definition:
       kind: synchronous
@@ -66,6 +84,8 @@ custom_types:
     - name: CreateUserPurchaseInput
     - name: PlacesInput
     - name: AvailabledToursInput
+    - name: InitMediaInput
+    - name: FinishMediaInput
   objects:
     - name: SignupOutput
     - name: LoginOutput
@@ -73,4 +93,6 @@ custom_types:
     - name: MeOutput
     - name: Places
     - name: AvailabledToursOutput
+    - name: InitMediaOutput
+    - name: FinishMediaOutput
   scalars: []

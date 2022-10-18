@@ -11,6 +11,18 @@ type Mutation {
 }
 
 type Mutation {
+  finish_media(
+    input: FinishMediaInput!
+  ): FinishMediaOutput
+}
+
+type Mutation {
+  init_media(
+    input: InitMediaInput!
+  ): InitMediaOutput
+}
+
+type Mutation {
   login(
     data: LoginInput!
   ): LoginOutput
@@ -61,6 +73,16 @@ input AvailabledToursInput {
   destiny: jsonb
 }
 
+input InitMediaInput {
+  record_id: uuid
+  type: String
+  mimetype: String
+}
+
+input FinishMediaInput {
+  id: uuid!
+}
+
 type SignupOutput {
   token: String!
   id: uuid!
@@ -90,5 +112,19 @@ type Places {
 
 type AvailabledToursOutput {
   tours: [jsonb]!
+}
+
+type InitMediaOutput {
+  id: uuid
+  record_id: uuid
+  type: String
+  mimetype: String
+  signed_url: String
+}
+
+type FinishMediaOutput {
+  record_id: uuid
+  type: String
+  mimetype: String
 }
 
