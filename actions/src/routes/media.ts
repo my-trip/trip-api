@@ -8,7 +8,8 @@ import { HasuraService } from '../remotes/hasura'
 
 import URL from 'url-parse'
 
-import { INSERT_MEDIA, MEDIA, FINISH_MEDIA } from '../remotes/hasura/graphql/'
+import { INSERT_MEDIA, MEDIA } from '../remotes/hasura/graphql'
+import { FINISH_MEDIA } from '../remotes/hasura/graphql/mutations/finish_media'
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -96,7 +97,7 @@ router.post('/media/finish', async (req, res) => {
       .then(res => res.ContentLength)
 
 
-    const { data: { media } } = await HasuraService.mutate({
+    const { data } = await HasuraService.mutate({
       mutation: FINISH_MEDIA,
       variables: {
         media_id: id,
@@ -105,8 +106,8 @@ router.post('/media/finish', async (req, res) => {
       }
     })
 
-    delete media.__typename
-    res.status(200).json(media)
+    delete data.media.__typename
+    res.status(200).json(data.media)
   }
   catch (error) {
     return res.status(400).json({ code: "404" })

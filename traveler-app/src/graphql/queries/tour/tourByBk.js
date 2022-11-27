@@ -6,6 +6,8 @@ export const TOUR_BY_PK = gql`
       name
       status
       boarding_date
+      cover
+      start_date
       packages {
         id
         name

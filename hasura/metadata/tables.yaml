@@ -975,6 +975,7 @@
       permission:
         columns:
           - agency_id
+          - cover
           - description
           - destiny_id
           - end_date
@@ -991,6 +992,7 @@
       permission:
         columns:
           - agency_id
+          - cover
           - description
           - destiny_id
           - end_date
@@ -1007,17 +1009,18 @@
     - role: traveler
       permission:
         columns:
-          - is_available
-          - description
-          - name
-          - status
-          - created_at
-          - end_date
-          - start_date
-          - updated_at
           - agency_id
+          - cover
+          - created_at
+          - description
           - destiny_id
+          - end_date
           - id
+          - is_available
+          - name
+          - start_date
+          - status
+          - updated_at
         computed_fields:
           - boarding_date
         filter: {}

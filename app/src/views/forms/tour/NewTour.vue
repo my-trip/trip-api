@@ -55,8 +55,8 @@
         </CInputGroup>
       </div>
     </div>
-    <UploadImages :max="1" @changed="handleImages"/>
-    <CCol xs="12">
+    <UploadImages :max="1" @changed="handleImages" />
+    <CCol class="mt-4" xs="12">
       <CButton color="primary" type="submit">Cadastrar</CButton>
     </CCol>
   </CForm>
@@ -65,8 +65,9 @@
 <script>
 import AdressForm from '../address/Address.vue'
 import { NEW_TOUR } from '../../../graphql/mutations/tour/newTour.js'
+import { INIT_MEDIA } from '../../../graphql/mutations/media/initMedia.js'
 import UploadImages from "vue-upload-drop-images"
-
+import axios from 'axios'
 
 export default {
   name: 'NewTourForm',
@@ -127,6 +128,31 @@ export default {
     },
     handleImages(files) {
       console.log(files[0])
+
+      const { type } = files[0]
+
+      this.$apollo.mutate({
+        mutation: INIT_MEDIA,
+        variables: {
+          mimetype: type,
+          type: 'tour-cover'
+        }
+      }).then(result => {
+        var body = new FormData();
+        body.append('file', files[0]);
+        fetch(result.data.init_media.signed_url, {
+          method: 'PUT', body: body, headers: {
+            'Content-Type': type
+          }
+        }).then(result => {
+          console.log(result)
+        }).catch(e => console.log(e));
+        // axios.put(result.data.init_media.signed_url, files[0], {
+        //   headers: { 'Content-Type': files[0].type }
+        // }).then(result => console.log(result)).catch(e => console.log(e))
+      }).catch(err => {
+        console.log({ err })
+      })
     }
   }
   // computed: {

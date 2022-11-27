@@ -20,7 +20,7 @@
 					<h8>Para até {{availablePeople}} pessoas</h8>
 				</CCol>
 				<CCol>
-					<h8>Próximo embarque: {{boarding}}</h8>
+					<h8>Data: {{boarding}}</h8>
 				</CCol>
 			</CRow>
 		</CCol>
@@ -67,7 +67,7 @@ export default {
 			return parseFloat((min / 100).toFixed(2));
 		},
 		boarding() {
-			return (new Date(this.tour.boarding_date)).toLocaleDateString()
+			return (new Date(this.tour.start_date)).toLocaleDateString()
 		},
 		image() {
 			return this.tour.cover || "https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder-1024x512.png"

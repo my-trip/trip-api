@@ -23,7 +23,7 @@ const routes = [
 			},
       {
 				path: '/purchase',
-				name: 'Purchase',
+				name: 'TravelerPurchases',
 				component: () => import('@/views/pages/authenticated/purchase/TravelerPurchase'),
 			},
       {

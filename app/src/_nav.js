@@ -24,22 +24,22 @@ export default [
     to: '/tour/new',
     icon: 'cil-calculator',
   },
-  {
-    component: 'CNavTitle',
-    name: 'Agência',
-  },
-  {
-    component: 'CNavItem',
-    name: 'Editar Agência',
-    to: '/theme/colors',
-    icon: 'cil-pencil',
-  },
-  {
-    component: 'CNavItem',
-    name: 'Gerênciar Usuários',
-    to: '/theme/colors',
-    icon: 'cil-user',
-  },
+  // {
+  //   component: 'CNavTitle',
+  //   name: 'Agência',
+  // },
+  // {
+  //   component: 'CNavItem',
+  //   name: 'Editar Agência',
+  //   to: '/theme/colors',
+  //   icon: 'cil-pencil',
+  // },
+  // {
+  //   component: 'CNavItem',
+  //   name: 'Gerênciar Usuários',
+  //   to: '/theme/colors',
+  //   icon: 'cil-user',
+  // },
   // {
   //   component: 'CNavItem',
   //   name: 'Typography',

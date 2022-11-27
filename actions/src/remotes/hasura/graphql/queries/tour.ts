@@ -34,6 +34,7 @@ export const GET_TOUR_AVAILABLE_TOUR = gql`
   ) {
       id
       name
+      cover
       destiny {
         state {
           id
@@ -44,6 +45,7 @@ export const GET_TOUR_AVAILABLE_TOUR = gql`
           name
         }
       }
+      start_date
       boarding_date
       packages( where: {
         start_selling_date: $start_selling_date,

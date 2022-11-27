@@ -24,6 +24,7 @@ export const GET_TOUR = gql`
         }
       }
       boarding_date
+      start_date
     }
   }
 `
